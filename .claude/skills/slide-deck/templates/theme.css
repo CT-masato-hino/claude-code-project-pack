@@ -1,0 +1,154 @@
+/* ============================================================
+   SIスライド デザインシステム v1.0
+   16:9 (1280x720) HTMLスライド用テーマ。
+   正本はこのファイル。デッキ生成時は <style> にインラインする。
+   Claude Design (claude.ai/design) のデザインシステムプロジェクト
+   に同期して会社共通テーマとして管理できる（SKILL.md参照）。
+   ============================================================ */
+
+:root {
+  /* ---- カラートークン（会社ブランドに合わせて差し替える） ---- */
+  --c-primary: #1e3a5f;      /* 濃紺: 見出し・表紙 */
+  --c-primary-dark: #14283f;
+  --c-accent: #2f80ed;       /* 青: 強調・リンク・チャート主色 */
+  --c-accent-warm: #e8833a;  /* 橙: 注意・第二強調 */
+  --c-ink: #24292f;          /* 本文 */
+  --c-ink-weak: #6a737d;     /* 補足文 */
+  --c-line: #d0d7de;
+  --c-bg: #ffffff;
+  --c-bg-soft: #f2f5f9;
+  --c-ok: #1a7f37;
+  --c-warn: #b58900;
+  --c-ng: #c0392b;
+
+  /* ---- タイポグラフィ ---- */
+  --font-body: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "游ゴシック", Meiryo, sans-serif;
+  --fs-hero: 44px;   /* 表紙タイトル */
+  --fs-h1: 30px;     /* スライドタイトル */
+  --fs-lead: 22px;   /* リード文・キーメッセージ */
+  --fs-body: 18px;
+  --fs-small: 14px;
+  --fs-foot: 11px;
+}
+
+/* ---- スライド基本構造 ---- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { background: #3c4043; }
+body { font-family: var(--font-body); color: var(--c-ink); counter-reset: page; }
+
+.slide {
+  width: 1280px; height: 720px;
+  margin: 24px auto;
+  background: var(--c-bg);
+  position: relative;
+  overflow: hidden;
+  padding: 56px 64px 64px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.35);
+  counter-increment: page;
+  display: flex; flex-direction: column;
+}
+
+/* フッター（社名・機密表記・ページ番号）。全スライド共通 */
+.slide::after {
+  content: var(--footer-left, "") "　　" var(--footer-conf, "") ;
+  position: absolute; left: 64px; bottom: 20px;
+  font-size: var(--fs-foot); color: var(--c-ink-weak);
+}
+.slide .pageno {
+  position: absolute; right: 64px; bottom: 18px;
+  font-size: var(--fs-foot); color: var(--c-ink-weak);
+}
+.slide .pageno::after { content: counter(page); }
+
+/* ---- 表紙スライド ---- */
+.slide.cover {
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
+  color: #fff; justify-content: center;
+}
+.cover .to { font-size: var(--fs-body); opacity: .85; margin-bottom: 40px; }
+.cover .title { font-size: var(--fs-hero); font-weight: 700; line-height: 1.35; }
+.cover .subtitle { font-size: var(--fs-lead); opacity: .9; margin-top: 16px; }
+.cover .meta { position: absolute; right: 64px; bottom: 56px; text-align: right;
+  font-size: var(--fs-small); line-height: 2; opacity: .9; }
+.cover .conf { position: absolute; left: 64px; top: 40px; font-size: var(--fs-small);
+  border: 1px solid rgba(255,255,255,.6); padding: 2px 12px; border-radius: 2px; }
+.cover::after, .cover .pageno { display: none; }
+
+/* ---- 中扉（セクション区切り） ---- */
+.slide.section { background: var(--c-bg-soft); justify-content: center; }
+.section .no { font-size: var(--fs-lead); color: var(--c-accent); font-weight: 700; }
+.section .title { font-size: 36px; font-weight: 700; color: var(--c-primary); margin-top: 8px; }
+
+/* ---- コンテンツスライド共通 ---- */
+.slide h1 {
+  font-size: var(--fs-h1); color: var(--c-primary); font-weight: 700;
+  padding-bottom: 12px; margin-bottom: 8px;
+  border-bottom: 3px solid var(--c-primary);
+}
+.slide h1 .kicker { display: block; font-size: var(--fs-small);
+  color: var(--c-ink-weak); font-weight: 400; margin-bottom: 4px; }
+
+/* キーメッセージ帯: 1スライド1メッセージの結論を最上部に置く */
+.msg {
+  background: var(--c-bg-soft); border-left: 6px solid var(--c-accent);
+  font-size: var(--fs-lead); font-weight: 700; line-height: 1.5;
+  padding: 14px 20px; margin: 18px 0;
+}
+
+.content { flex: 1; font-size: var(--fs-body); line-height: 1.7; padding-top: 6px; }
+.content ul, .content ol { padding-left: 1.4em; }
+.content li { margin: 6px 0; }
+.note { font-size: var(--fs-small); color: var(--c-ink-weak); margin-top: 12px; }
+
+/* ---- レイアウト部品 ---- */
+.cols { display: flex; gap: 28px; align-items: stretch; }
+.cols > * { flex: 1; min-width: 0; }
+
+.card {
+  border: 1px solid var(--c-line); border-radius: 6px;
+  padding: 18px 20px; background: var(--c-bg);
+}
+.card .card-title { font-weight: 700; color: var(--c-primary);
+  font-size: var(--fs-body); margin-bottom: 8px;
+  padding-left: 10px; border-left: 4px solid var(--c-accent); }
+
+.stat { text-align: center; padding: 20px 8px; background: var(--c-bg-soft); border-radius: 6px; }
+.stat .v { font-size: 40px; font-weight: 700; color: var(--c-accent); }
+.stat .l { font-size: var(--fs-small); color: var(--c-ink-weak); margin-top: 4px; }
+
+/* ---- 表 ---- */
+table { border-collapse: collapse; width: 100%; font-size: 16px; }
+th, td { border: 1px solid var(--c-line); padding: 8px 12px; text-align: left; vertical-align: top; }
+thead th { background: var(--c-primary); color: #fff; font-weight: 700; }
+tbody tr:nth-child(even) { background: var(--c-bg-soft); }
+
+/* ステータスバッジ（進捗・リスク・課題で使用） */
+.badge { display: inline-block; padding: 1px 12px; border-radius: 10px;
+  font-size: var(--fs-small); font-weight: 700; color: #fff; white-space: nowrap; }
+.badge.ok   { background: var(--c-ok); }    /* 順調 / 完了 / 低 */
+.badge.warn { background: var(--c-warn); }  /* 注意 / 遅延懸念 / 中 */
+.badge.ng   { background: var(--c-ng); }    /* 遅延 / 未対応 / 高 */
+
+/* ---- 簡易スケジュール（横棒） ---- */
+.sched { display: grid; grid-template-columns: 160px 1fr; row-gap: 10px;
+  align-items: center; font-size: var(--fs-small); }
+.sched .bar-area { position: relative; height: 22px;
+  background: repeating-linear-gradient(90deg, var(--c-bg-soft) 0 calc(100%/12 - 1px), var(--c-line) 0 calc(100%/12)); }
+.sched .bar { position: absolute; top: 3px; height: 16px; border-radius: 3px;
+  background: var(--c-accent); }
+.sched .bar.done { background: var(--c-primary); }
+.sched .bar.risk { background: var(--c-accent-warm); }
+/* 使い方: <div class="bar" style="left:25%;width:33%"></div>（left/widthを期間に合わせる） */
+
+/* ---- まとめ・お願い事項スライド ---- */
+.ask { border: 2px solid var(--c-accent-warm); border-radius: 6px;
+  padding: 16px 20px; margin-top: 16px; }
+.ask .ask-title { color: var(--c-accent-warm); font-weight: 700; margin-bottom: 6px; }
+
+/* ---- 画面表示（連続スクロール）と印刷（PDF納品） ---- */
+@media print {
+  html, body { background: #fff; }
+  .slide { margin: 0; box-shadow: none; page-break-after: always; }
+  .slide:last-child { page-break-after: auto; }
+}
+@page { size: 1280px 720px; margin: 0; }

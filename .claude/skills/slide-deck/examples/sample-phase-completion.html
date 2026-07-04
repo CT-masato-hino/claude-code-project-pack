@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>基本設計工程 完了のご報告（サンプル）</title>
+<style>
+/* ============================================================
+   SIスライド デザインシステム v1.0
+   16:9 (1280x720) HTMLスライド用テーマ。
+   正本はこのファイル。デッキ生成時は <style> にインラインする。
+   Claude Design (claude.ai/design) のデザインシステムプロジェクト
+   に同期して会社共通テーマとして管理できる（SKILL.md参照）。
+   ============================================================ */
+
+:root {
+  /* ---- カラートークン（会社ブランドに合わせて差し替える） ---- */
+  --c-primary: #1e3a5f;      /* 濃紺: 見出し・表紙 */
+  --c-primary-dark: #14283f;
+  --c-accent: #2f80ed;       /* 青: 強調・リンク・チャート主色 */
+  --c-accent-warm: #e8833a;  /* 橙: 注意・第二強調 */
+  --c-ink: #24292f;          /* 本文 */
+  --c-ink-weak: #6a737d;     /* 補足文 */
+  --c-line: #d0d7de;
+  --c-bg: #ffffff;
+  --c-bg-soft: #f2f5f9;
+  --c-ok: #1a7f37;
+  --c-warn: #b58900;
+  --c-ng: #c0392b;
+
+  /* ---- タイポグラフィ ---- */
+  --font-body: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "游ゴシック", Meiryo, sans-serif;
+  --fs-hero: 44px;   /* 表紙タイトル */
+  --fs-h1: 30px;     /* スライドタイトル */
+  --fs-lead: 22px;   /* リード文・キーメッセージ */
+  --fs-body: 18px;
+  --fs-small: 14px;
+  --fs-foot: 11px;
+}
+
+/* ---- スライド基本構造 ---- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { background: #3c4043; }
+body { font-family: var(--font-body); color: var(--c-ink); counter-reset: page; }
+
+.slide {
+  width: 1280px; height: 720px;
+  margin: 24px auto;
+  background: var(--c-bg);
+  position: relative;
+  overflow: hidden;
+  padding: 56px 64px 64px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.35);
+  counter-increment: page;
+  display: flex; flex-direction: column;
+}
+
+/* フッター（社名・機密表記・ページ番号）。全スライド共通 */
+.slide::after {
+  content: var(--footer-left, "") "　　" var(--footer-conf, "") ;
+  position: absolute; left: 64px; bottom: 20px;
+  font-size: var(--fs-foot); color: var(--c-ink-weak);
+}
+.slide .pageno {
+  position: absolute; right: 64px; bottom: 18px;
+  font-size: var(--fs-foot); color: var(--c-ink-weak);
+}
+.slide .pageno::after { content: counter(page); }
+
+/* ---- 表紙スライド ---- */
+.slide.cover {
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
+  color: #fff; justify-content: center;
+}
+.cover .to { font-size: var(--fs-body); opacity: .85; margin-bottom: 40px; }
+.cover .title { font-size: var(--fs-hero); font-weight: 700; line-height: 1.35; }
+.cover .subtitle { font-size: var(--fs-lead); opacity: .9; margin-top: 16px; }
+.cover .meta { position: absolute; right: 64px; bottom: 56px; text-align: right;
+  font-size: var(--fs-small); line-height: 2; opacity: .9; }
+.cover .conf { position: absolute; left: 64px; top: 40px; font-size: var(--fs-small);
+  border: 1px solid rgba(255,255,255,.6); padding: 2px 12px; border-radius: 2px; }
+.cover::after, .cover .pageno { display: none; }
+
+/* ---- 中扉（セクション区切り） ---- */
+.slide.section { background: var(--c-bg-soft); justify-content: center; }
+.section .no { font-size: var(--fs-lead); color: var(--c-accent); font-weight: 700; }
+.section .title { font-size: 36px; font-weight: 700; color: var(--c-primary); margin-top: 8px; }
+
+/* ---- コンテンツスライド共通 ---- */
+.slide h1 {
+  font-size: var(--fs-h1); color: var(--c-primary); font-weight: 700;
+  padding-bottom: 12px; margin-bottom: 8px;
+  border-bottom: 3px solid var(--c-primary);
+}
+.slide h1 .kicker { display: block; font-size: var(--fs-small);
+  color: var(--c-ink-weak); font-weight: 400; margin-bottom: 4px; }
+
+/* キーメッセージ帯: 1スライド1メッセージの結論を最上部に置く */
+.msg {
+  background: var(--c-bg-soft); border-left: 6px solid var(--c-accent);
+  font-size: var(--fs-lead); font-weight: 700; line-height: 1.5;
+  padding: 14px 20px; margin: 18px 0;
+}
+
+.content { flex: 1; font-size: var(--fs-body); line-height: 1.7; padding-top: 6px; }
+.content ul, .content ol { padding-left: 1.4em; }
+.content li { margin: 6px 0; }
+.note { font-size: var(--fs-small); color: var(--c-ink-weak); margin-top: 12px; }
+
+/* ---- レイアウト部品 ---- */
+.cols { display: flex; gap: 28px; align-items: stretch; }
+.cols > * { flex: 1; min-width: 0; }
+
+.card {
+  border: 1px solid var(--c-line); border-radius: 6px;
+  padding: 18px 20px; background: var(--c-bg);
+}
+.card .card-title { font-weight: 700; color: var(--c-primary);
+  font-size: var(--fs-body); margin-bottom: 8px;
+  padding-left: 10px; border-left: 4px solid var(--c-accent); }
+
+.stat { text-align: center; padding: 20px 8px; background: var(--c-bg-soft); border-radius: 6px; }
+.stat .v { font-size: 40px; font-weight: 700; color: var(--c-accent); }
+.stat .l { font-size: var(--fs-small); color: var(--c-ink-weak); margin-top: 4px; }
+
+/* ---- 表 ---- */
+table { border-collapse: collapse; width: 100%; font-size: 16px; }
+th, td { border: 1px solid var(--c-line); padding: 8px 12px; text-align: left; vertical-align: top; }
+thead th { background: var(--c-primary); color: #fff; font-weight: 700; }
+tbody tr:nth-child(even) { background: var(--c-bg-soft); }
+
+/* ステータスバッジ（進捗・リスク・課題で使用） */
+.badge { display: inline-block; padding: 1px 12px; border-radius: 10px;
+  font-size: var(--fs-small); font-weight: 700; color: #fff; white-space: nowrap; }
+.badge.ok   { background: var(--c-ok); }    /* 順調 / 完了 / 低 */
+.badge.warn { background: var(--c-warn); }  /* 注意 / 遅延懸念 / 中 */
+.badge.ng   { background: var(--c-ng); }    /* 遅延 / 未対応 / 高 */
+
+/* ---- 簡易スケジュール（横棒） ---- */
+.sched { display: grid; grid-template-columns: 160px 1fr; row-gap: 10px;
+  align-items: center; font-size: var(--fs-small); }
+.sched .bar-area { position: relative; height: 22px;
+  background: repeating-linear-gradient(90deg, var(--c-bg-soft) 0 calc(100%/12 - 1px), var(--c-line) 0 calc(100%/12)); }
+.sched .bar { position: absolute; top: 3px; height: 16px; border-radius: 3px;
+  background: var(--c-accent); }
+.sched .bar.done { background: var(--c-primary); }
+.sched .bar.risk { background: var(--c-accent-warm); }
+/* 使い方: <div class="bar" style="left:25%;width:33%"></div>（left/widthを期間に合わせる） */
+
+/* ---- まとめ・お願い事項スライド ---- */
+.ask { border: 2px solid var(--c-accent-warm); border-radius: 6px;
+  padding: 16px 20px; margin-top: 16px; }
+.ask .ask-title { color: var(--c-accent-warm); font-weight: 700; margin-bottom: 6px; }
+
+/* ---- 画面表示（連続スクロール）と印刷（PDF納品） ---- */
+@media print {
+  html, body { background: #fff; }
+  .slide { margin: 0; box-shadow: none; page-break-after: always; }
+  .slide:last-child { page-break-after: auto; }
+}
+@page { size: 1280px 720px; margin: 0; }
+
+.slide { --footer-left: "株式会社サンプルシステムズ"; --footer-conf: "関係者外秘"; }
+</style>
+</head>
+<body>
+
+<section class="slide cover">
+  <div class="conf">関係者外秘</div>
+  <div class="to">○○株式会社 御中</div>
+  <div class="title">販売管理システム再構築<br>基本設計工程 完了のご報告</div>
+  <div class="subtitle">〜 設計成果物のご説明と製造工程への移行判定のお願い 〜</div>
+  <div class="meta">
+    2026年7月4日<br>
+    株式会社サンプルシステムズ<br>
+    第一SI事業部
+  </div>
+</section>
+
+<section class="slide">
+  <h1><span class="kicker">はじめに</span>本日のご説明内容</h1>
+  <div class="msg">基本設計は完了条件を充足しました。残課題2件の対応方針をご確認の上、製造工程への移行判定をお願いします。</div>
+  <div class="content">
+    <ol>
+      <li>基本設計工程の完了判定サマリ</li>
+      <li>成果物一覧と完了条件の充足状況</li>
+      <li>残課題と対応方針</li>
+      <li>製造工程の計画とお客様へのお願い</li>
+    </ol>
+  </div>
+  <div class="pageno"></div>
+</section>
+
+<section class="slide section">
+  <div class="no">1</div>
+  <div class="title">基本設計工程の完了判定サマリ</div>
+  <div class="pageno"></div>
+</section>
+
+<section class="slide">
+  <h1><span class="kicker">1. 完了判定サマリ</span>工程全体の達成状況</h1>
+  <div class="msg">全48本の設計書を完了し、レビュー指摘は全件クローズ。品質指標も基準値内です。</div>
+  <div class="content">
+    <div class="cols">
+      <div class="stat"><div class="v">48/48</div><div class="l">設計書 完了本数</div></div>
+      <div class="stat"><div class="v">0件</div><div class="l">未クローズのMust指摘</div></div>
+      <div class="stat"><div class="v">2件</div><div class="l">残課題（対応方針確定済み）</div></div>
+    </div>
+    <div class="cols" style="margin-top:20px">
+      <div class="card">
+        <div class="card-title">品質面のトピック</div>
+        設計書相互レビューに加え、ERD整合性監査・セキュリティ設計レビューを実施し、指摘は全件反映済みです。
+      </div>
+      <div class="card">
+        <div class="card-title">スケジュール面のトピック</div>
+        計画どおり7月10日の工程完了予定に対し、6営業日前倒しで完了しました。
+      </div>
+    </div>
+  </div>
+  <div class="pageno"></div>
+</section>
+
+<section class="slide">
+  <h1><span class="kicker">2. 成果物</span>成果物一覧と完了条件の充足状況</h1>
+  <div class="msg">必須成果物はすべて作成・レビュー完了。貴社ご承認待ちは画面設計書1式のみです。</div>
+  <div class="content">
+    <table>
+      <thead><tr><th>成果物</th><th style="width:90px">本数</th><th style="width:110px">状況</th><th>備考</th></tr></thead>
+      <tbody>
+        <tr><td>画面設計書</td><td>24本</td><td><span class="badge warn">承認待ち</span></td><td>7/8 レビュー会にてご承認をお願いします</td></tr>
+        <tr><td>外部IF設計書</td><td>8本</td><td><span class="badge ok">承認済</span></td><td>連携先3社との対向仕様も合意済み</td></tr>
+        <tr><td>帳票設計書</td><td>6本</td><td><span class="badge ok">承認済</span></td><td>サンプル帳票にて事前確認済み</td></tr>
+        <tr><td>テーブル定義書・ERD</td><td>10本</td><td><span class="badge ok">承認済</span></td><td>整合性監査パス（6/30実施）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="pageno"></div>
+</section>
+
+<section class="slide">
+  <h1><span class="kicker">3. 残課題</span>残課題と対応方針</h1>
+  <div class="msg">残課題2件はいずれも製造工程と並行して対応可能であり、工程移行の妨げにはなりません。</div>
+  <div class="content">
+    <table>
+      <thead><tr><th style="width:70px">No</th><th>課題</th><th style="width:90px">重要度</th><th>対応方針</th><th style="width:110px">期限</th></tr></thead>
+      <tbody>
+        <tr><td>23</td><td>経理ロールの帳票参照範囲が未確定</td><td><span class="badge warn">中</span></td><td>7/8レビュー会で決定いただき、詳細設計に反映</td><td>2026-07-08</td></tr>
+        <tr><td>27</td><td>取引先マスタの移行データ品質（住所欠損 3.2%）</td><td><span class="badge warn">中</span></td><td>クレンジング分担を移行計画書に明記し合意</td><td>2026-07-15</td></tr>
+      </tbody>
+    </table>
+    <p class="note">クローズ済み課題を含む全件は課題管理表（別紙）をご参照ください。</p>
+  </div>
+  <div class="pageno"></div>
+</section>
+
+<section class="slide">
+  <h1><span class="kicker">4. 今後の計画</span>製造工程のスケジュール</h1>
+  <div class="msg">製造・単体テストは7/13〜9/25の11週間。8月末に中間デモを実施し、動くものを早期にご確認いただきます。</div>
+  <div class="content">
+    <div class="sched" style="margin-top:8px">
+      <div>基本設計（完了）</div><div class="bar-area"><div class="bar done" style="left:0%;width:25%"></div></div>
+      <div>製造・単体テスト</div><div class="bar-area"><div class="bar" style="left:25%;width:42%"></div></div>
+      <div>結合テスト</div><div class="bar-area"><div class="bar" style="left:67%;width:16%"></div></div>
+      <div>総合テスト・移行リハ</div><div class="bar-area"><div class="bar risk" style="left:83%;width:17%"></div></div>
+    </div>
+    <p class="note">※ 横軸: 2026年4月〜2027年3月（月単位）。橙色は移行リハーサル日程が確定次第、詳細化します。</p>
+  </div>
+  <div class="pageno"></div>
+</section>
+
+<section class="slide">
+  <h1>まとめと今後のお願い</h1>
+  <div class="content">
+    <ul>
+      <li>基本設計工程は完了条件を充足し、6営業日前倒しで完了しました</li>
+      <li>残課題2件は対応方針確定済みで、製造工程への移行に支障はありません</li>
+    </ul>
+    <div class="ask">
+      <div class="ask-title">お客様にお願いしたい事項</div>
+      <ul>
+        <li>7/8（水）レビュー会での画面設計書のご承認（ご出席: 業務部門ご担当者様）</li>
+        <li>課題No.23「経理ロールの帳票参照範囲」のご決定（期限: 7/8）</li>
+        <li>製造工程への移行判定のご回答（期限: 7/10）</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pageno"></div>
+</section>
+
+<script>
+(function () {
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  let idx = 0;
+  function go(i) {
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    slides[idx].scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+  document.addEventListener("keydown", (e) => {
+    if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) { e.preventDefault(); go(idx + 1); }
+    if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) { e.preventDefault(); go(idx - 1); }
+    if (e.key === "Home") { e.preventDefault(); go(0); }
+    if (e.key === "End") { e.preventDefault(); go(slides.length - 1); }
+  });
+})();
+</script>
+</body>
+</html>

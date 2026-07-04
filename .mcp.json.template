@@ -1,0 +1,41 @@
+{
+  "_comment": "タスク管理・コミュニケーションツール接続テンプレート。案件リポジトリ直下に .mcp.json としてコピーし、使うものだけ残す。認証は初回接続時に各サービスのOAuth/APIキーで行う（人間が実施）。サーバーURL・提供状況は変わるため、導入時に mcp registry（suggest_connectors / search_mcp_registry）で最新を確認すること。運用ルールは .claude/skills/pm-sync/SKILL.md 参照。",
+  "mcpServers": {
+    "atlassian": {
+      "_comment": "Jira/Confluence 公式リモートMCP。課題の起票・検索・更新",
+      "type": "sse",
+      "url": "https://mcp.atlassian.com/v1/sse"
+    },
+    "notion": {
+      "_comment": "Notion 公式MCP。課題DB・ドキュメントの読み書き",
+      "type": "http",
+      "url": "https://mcp.notion.com/mcp"
+    },
+    "backlog": {
+      "_comment": "Backlog(Nulab)。コミュニティMCPをregistryで検索して差し替える。APIキーはスペース設定から発行",
+      "command": "npx",
+      "args": ["-y", "<registry で確認した backlog MCP パッケージ名>"],
+      "env": {
+        "BACKLOG_SPACE_URL": "https://<space>.backlog.jp",
+        "BACKLOG_API_KEY": "<環境変数か keychain 経由で。ここに直書きしない>"
+      }
+    },
+    "redmine": {
+      "_comment": "Redmine。コミュニティMCPをregistryで検索して差し替える",
+      "command": "npx",
+      "args": ["-y", "<registry で確認した redmine MCP パッケージ名>"],
+      "env": {
+        "REDMINE_URL": "https://<host>/redmine",
+        "REDMINE_API_KEY": "<環境変数経由で設定>"
+      }
+    },
+    "slack": {
+      "_comment": "Slack。通知・サマリ投稿用。registryで最新の公式/推奨サーバーを確認",
+      "command": "npx",
+      "args": ["-y", "<registry で確認した slack MCP パッケージ名>"],
+      "env": {
+        "SLACK_BOT_TOKEN": "<環境変数経由で設定>"
+      }
+    }
+  }
+}

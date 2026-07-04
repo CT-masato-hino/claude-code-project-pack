@@ -1,0 +1,28 @@
+name: consistency-check
+
+# push/PRごとにパックの整合性を検査する。
+# 検査内容: README記載数と実ファイル数 / 参照切れ（標準・スキル・エージェント名）/
+#           ローカルパス・メール・シークレットらしき文字列の混入
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: パック整合性監査
+        # 追加の混入検査ワード（社名・個人名など）を使う場合は
+        # リポジトリの Secrets に AUDIT_KEYWORDS（カンマ区切り）を登録する
+        env:
+          AUDIT_KEYWORDS: ${{ secrets.AUDIT_KEYWORDS }}
+        run: python3 tools/audit_pack.py

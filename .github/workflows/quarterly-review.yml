@@ -1,0 +1,77 @@
+name: quarterly-review
+
+# 四半期ごとの棚卸しリマインダー。陳腐化が速い領域（MCP接続先・Claudeプラン機能・
+# 穴あけパターン）の点検issueを自動起票し、MCPエンドポイントの死活も機械確認する。
+# ドキュメントに「四半期棚卸し」と書くだけでは実行されないため、通知側から人を起動する。
+on:
+  schedule:
+    - cron: "0 0 1 1,4,7,10 *"   # 1月/4月/7月/10月の1日 00:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: MCPエンドポイント死活確認
+        id: mcp
+        run: |
+          set +e
+          check() {
+            code=$(curl -sI -o /dev/null -w "%{http_code}" --max-time 15 "$2")
+            # 認証エラー(401/403)や405は「生きている」。000(接続不能)や404を疑う
+            case "$code" in
+              000|404|410) echo "- [ ] ⚠️ **$1**: HTTP $code — URL変更/廃止の疑い。registryで最新を確認" >> mcp_report.md ;;
+              *)           echo "- [x] $1: HTTP $code（到達可能）" >> mcp_report.md ;;
+            esac
+          }
+          : > mcp_report.md
+          check "Atlassian MCP" "https://mcp.atlassian.com/v1/sse"
+          check "Notion MCP"    "https://mcp.notion.com/mcp"
+          echo "（Backlog/Redmine/Slackはテンプレート内プレースホルダーのため対象外。registryで確認）" >> mcp_report.md
+          exit 0
+
+      - name: 整合性監査（レポート添付用）
+        id: audit
+        run: |
+          python3 tools/audit_pack.py > audit_report.txt 2>&1 || echo "AUDIT_FAILED=true" >> "$GITHUB_ENV"
+
+      - name: 棚卸しissueを起票
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="四半期棚卸し $(date +%Y-%m)"
+          {
+            echo "自動起票された定期棚卸しです。完了したらチェックしてクローズしてください。"
+            echo ""
+            echo "## 1. MCP接続先の鮮度（.mcp.json.template）"
+            cat mcp_report.md
+            echo ""
+            echo "## 2. 陳腐化しやすいドキュメントの点検"
+            echo "- [ ] docs/standards/ai-security-baseline.md — Claudeプラン別機能（managed settings等）が最新のAnthropicドキュメントと一致しているか"
+            echo "- [ ] docs/standards/enterprise-controls.md — 新しい穴あけパターン・ヒヤリハット台帳からの反映漏れがないか"
+            echo "- [ ] .mcp.json.template — プレースホルダーのパッケージ名をregistryで再確認"
+            echo "- [ ] README 4層モデル — ハーネス/ループ層の記述が現行のClaude Code機能と乖離していないか"
+            echo ""
+            echo "## 3. 形骸化点検（ai-dev-standardizerの職務）"
+            echo "- [ ] 3週連続オール緑のQCD基準の緩和/廃止検討"
+            echo "- [ ] 3週間呼ばれていないエージェントの棚卸し"
+            echo ""
+            echo "## 4. 整合性監査の結果"
+            echo '```'
+            cat audit_report.txt
+            echo '```'
+          } > issue_body.md
+          if [ "${AUDIT_FAILED:-false}" = "true" ]; then
+            TITLE="$TITLE ⚠️整合性エラーあり"
+          fi
+          gh issue create --title "$TITLE" --body-file issue_body.md --label "maintenance" \
+            || gh issue create --title "$TITLE" --body-file issue_body.md

@@ -1,0 +1,8 @@
+.DS_Store
+Thumbs.db
+*.log
+
+# 案件で使うときに生成されるもの（パック原本リポジトリには含めない）
+.mcp.json
+.claude/settings.local.json
+.claude/agents.disabled/

@@ -1,0 +1,35 @@
+<!-- @dsCard group="Slides" name="コンテンツスライド" subtitle="キーメッセージ帯＋2カラムカード / 表＋ステータスバッジ" -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>コンテンツスライド プレビュー</title>
+<style>
+/* THEME_CSS_HERE */
+html { background: transparent; }
+.slide { margin: 0 0 24px; box-shadow: none; --footer-left: "株式会社サンプルシステムズ"; --footer-conf: "関係者外秘"; }
+</style>
+</head>
+<body>
+<section class="slide">
+  <h1><span class="kicker">2. 進捗状況</span>全体進捗と今週のトピック</h1>
+  <div class="msg">基本設計は計画通り7/10に完了見込み。画面設計1件の顧客確認遅延のみ要フォロー。</div>
+  <div class="content">
+    <div class="cols">
+      <div class="stat"><div class="v">87%</div><div class="l">設計書作成進捗（42/48本）</div></div>
+      <div class="stat"><div class="v">3件</div><div class="l">未クローズ課題（前週比 -2）</div></div>
+      <div class="stat"><div class="v">7/10</div><div class="l">工程完了予定（変更なし）</div></div>
+    </div>
+    <table style="margin-top:20px">
+      <thead><tr><th style="width:180px">領域</th><th style="width:110px">状況</th><th>今週のトピック</th></tr></thead>
+      <tbody>
+        <tr><td>画面設計</td><td><span class="badge warn">注意</span></td><td>SCR-014の項目定義について顧客確認待ち（期限 7/7）</td></tr>
+        <tr><td>IF設計</td><td><span class="badge ok">順調</span></td><td>外部連携3IFの対向仕様合意済み</td></tr>
+        <tr><td>テーブル設計</td><td><span class="badge ok">順調</span></td><td>ERD確定・整合性監査パス</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="pageno"></div>
+</section>
+</body>
+</html>

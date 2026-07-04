@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>{{文書名}}</title>
+<style>
+/* ==== ここに templates/theme.css の内容を丸ごとインラインする ==== */
+/* THEME_CSS_HERE */
+
+/* デッキ固有の変数（フッター表記） */
+.slide { --footer-left: "{{自社名}}"; --footer-conf: "{{機密表記: 例 Confidential — 本資料の取り扱いにご注意ください}}"; }
+</style>
+</head>
+<body>
+
+<!-- ============ 表紙 ============ -->
+<section class="slide cover">
+  <div class="conf">{{機密区分: 社外秘 / 関係者外秘 など}}</div>
+  <div class="to">{{顧客社名}} 御中</div>
+  <div class="title">{{資料タイトル}}</div>
+  <div class="subtitle">{{サブタイトル: 〜工程完了のご報告〜 など}}</div>
+  <div class="meta">
+    {{YYYY年M月D日}}<br>
+    {{自社名}}<br>
+    {{部署・担当者名}}
+  </div>
+</section>
+
+<!-- ============ 本日の位置づけ＋アジェンダ ============ -->
+<section class="slide">
+  <h1><span class="kicker">はじめに</span>本日のご説明内容</h1>
+  <div class="msg">{{この資料で顧客に持ち帰ってほしい結論・お願いを1文で}}</div>
+  <div class="content">
+    <ol>
+      <li>{{アジェンダ1}}</li>
+      <li>{{アジェンダ2}}</li>
+      <li>{{アジェンダ3}}</li>
+      <li>本日ご確認・ご判断いただきたい事項</li>
+    </ol>
+  </div>
+  <div class="pageno"></div>
+</section>
+
+<!-- ============ 中扉（セクションごとに複製） ============ -->
+<section class="slide section">
+  <div class="no">1</div>
+  <div class="title">{{セクション名}}</div>
+  <div class="pageno"></div>
+</section>
+
+<!-- ============ コンテンツ（1スライド1メッセージ） ============ -->
+<section class="slide">
+  <h1><span class="kicker">{{セクション名}}</span>{{スライドタイトル}}</h1>
+  <div class="msg">{{このスライドの結論を1文で（msg帯は全コンテンツスライド必須）}}</div>
+  <div class="content">
+    <div class="cols">
+      <div class="card">
+        <div class="card-title">{{カード見出し}}</div>
+        {{内容}}
+      </div>
+      <div class="card">
+        <div class="card-title">{{カード見出し}}</div>
+        {{内容}}
+      </div>
+    </div>
+    <p class="note">{{注記・出典など}}</p>
+  </div>
+  <div class="pageno"></div>
+</section>
+
+<!-- ============ 表スライドの例（進捗・課題一覧など） ============ -->
+<section class="slide">
+  <h1><span class="kicker">{{セクション名}}</span>{{タイトル}}</h1>
+  <div class="msg">{{結論}}</div>
+  <div class="content">
+    <table>
+      <thead><tr><th>項目</th><th>状況</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td>{{項目}}</td><td><span class="badge ok">順調</span></td><td>{{説明}}</td></tr>
+        <tr><td>{{項目}}</td><td><span class="badge warn">注意</span></td><td>{{説明}}</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="pageno"></div>
+</section>
+
+<!-- ============ まとめ・お願い事項（最終スライド） ============ -->
+<section class="slide">
+  <h1>まとめと今後のお願い</h1>
+  <div class="content">
+    <ul>
+      <li>{{要点1}}</li>
+      <li>{{要点2}}</li>
+    </ul>
+    <div class="ask">
+      <div class="ask-title">お客様にお願いしたい事項</div>
+      <ul>
+        <li>{{お願い1（期限つき）}}</li>
+        <li>{{お願い2（期限つき）}}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pageno"></div>
+</section>
+
+<script>
+// 矢印キー / PageUp・PageDown でスライド単位に移動（レビュー会での投影用）
+(function () {
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  let idx = 0;
+  function go(i) {
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    slides[idx].scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+  document.addEventListener("keydown", (e) => {
+    if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) { e.preventDefault(); go(idx + 1); }
+    if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) { e.preventDefault(); go(idx - 1); }
+    if (e.key === "Home") { e.preventDefault(); go(0); }
+    if (e.key === "End") { e.preventDefault(); go(slides.length - 1); }
+  });
+})();
+</script>
+</body>
+</html>
