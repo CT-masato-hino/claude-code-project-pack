@@ -46,6 +46,15 @@ for pat, actual, label in [
         if int(m.group(1)) != actual:
             issues.append("README %s不一致: 記載=%s 実際=%d" % (label, m.group(1), actual))
 
+# ---- 1b. 版数整合（README ↔ CHANGELOG） ----
+changelog = texts.get(ROOT / "CHANGELOG.md", "")
+m_readme = re.search(r"現在のバージョン: \*\*([\d.]+)\*\*", readme)
+m_cl = re.search(r"^## \[([\d.]+)\]", changelog, re.M)
+if m_readme and m_cl and m_readme.group(1) != m_cl.group(1):
+    issues.append("版数不一致: README=%s CHANGELOG最新=%s" % (m_readme.group(1), m_cl.group(1)))
+elif not (m_readme and m_cl):
+    issues.append("版数表記が見つからない: README=%s CHANGELOG=%s" % (bool(m_readme), bool(m_cl)))
+
 # ---- 2. 参照整合 ----
 for f, text in texts.items():
     rel = f.relative_to(ROOT)
