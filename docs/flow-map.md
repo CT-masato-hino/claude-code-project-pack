@@ -74,7 +74,7 @@ flowchart LR
 flowchart TD
     subgraph DAILY["日次"]
         D1["実績記録 C-01<br/>documentation-specialist"] --> D2["pm-sync 同期<br/>外部ツール⇔issues.md"]
-        D3["セッション終了3問<br/>（llm-friendly日次版）"]
+        D3["セッション終了5問<br/>（llm-friendly日次版・git衛生込み）"]
     end
 
     subgraph WEEKLY["週次"]
