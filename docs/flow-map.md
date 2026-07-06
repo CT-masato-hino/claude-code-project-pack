@@ -2,19 +2,19 @@
 
 パックの構成要素がどう連なるかをMermaidで図示する。**個々の定義の正本は各ファイルであり、この図は読むための地図**（矛盾したら各ファイルが正）。
 
-## 1. 工程フロー × エージェント × スキル（V字モデル）
+## 1. 工程フロー × エージェント × スキル（V字＋シフトレフトのW字運用）
 
 ```mermaid
 flowchart TD
-    INIT["/project-init<br/>出発資産判定・テーラリング・QCD確定"] --> BPA
+    INIT["/project-init<br/>出発資産判定・テーラリング・QCD確定<br/>project-phase.md＋project-plan.html生成"] --> BPA
 
-    subgraph LEFT["V字左側（定義・設計）"]
-        BPA["業務分析<br/>business-process-analyst"] --> REQ["要件定義 /requirements-definition<br/>requirements-analyst"]
-        REQ --> BD["基本設計 /basic-design<br/>api-designer・report-specialist<br/>batch-specialist・architecture-guardian"]
-        BD --> DD["詳細設計 /detail-design"]
+    subgraph LEFT["V字左側（定義・設計）— テスト仕様ドラフトも左側で作る（W字 /test-planning）"]
+        BPA["業務分析<br/>business-process-analyst"] --> REQ["要件定義 /requirements-definition<br/>requirements-analyst<br/>＋テスト計画・総合テスト仕様ドラフト"]
+        REQ --> BD["基本設計 /basic-design<br/>api-designer・report-specialist<br/>batch-specialist・architecture-guardian<br/>＋HTMLモック承認（UIあり）・結合テスト仕様ドラフト"]
+        BD --> DD["詳細設計 /detail-design<br/>＋単体テスト観点"]
     end
 
-    DD --> IMP["製造<br/>frontend-coder・backend-coder・infra-coder<br/>→ code-reviewer（Q-01/Q-02）"]
+    DD --> IMP["製造<br/>frontend-coder・backend-coder・infra-coder<br/>→ code-reviewer（Q-01/Q-02・設計記載成果物の実在確認）"]
 
     subgraph RIGHT["V字右側（検証）"]
         UT["単体テスト"] --> IT["結合テスト"]
@@ -22,7 +22,7 @@ flowchart TD
         ST --> UAT["受入支援・移行<br/>migration-specialist /migration-planning"]
     end
 
-    IMP --> UT
+    IMP --> TRC["トレーサビリティ突合<br/>画面・IF×実装（leaderゲート）"] --> UT
     UAT --> DEL["納品 /delivery-package<br/>→ 保守 incident-responder"]
 
     DD -.検証根拠.-> UT
@@ -31,6 +31,7 @@ flowchart TD
 
     ERD["data-model-specialist<br/>ERD独占管轄 /erd-update"] -.全工程.- BD
     SEC["security-compliance"] -.全工程ゲート.- DEL
+    PH["docs/project-phase.md<br/>工程正本・ゲート判定・越境記録"] -.工程移行ごとにleaderが更新.- TRC
 ```
 
 ## 2. ドキュメント正本フロー（誰が作り、誰が照合するか）

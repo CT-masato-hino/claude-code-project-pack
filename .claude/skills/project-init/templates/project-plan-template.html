@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!--
+  claude-code-project-pack: 案件別プロジェクト計画テンプレート
+  project-init がテーラリング結果を反映して docs/project-plan.html として生成する。
+  正本は docs/project-phase.md（工程状態）とテーラリング記録。このHTMLは生成ビュー（直接編集しない）。
+  {{ }} を実データで置換し、工程が進んだら再生成すること。
+-->
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{案件名}} プロジェクト計画</title>
+<style>
+  :root {
+    --ink: #1a2233; --sub: #5a6478; --line: #d8dde8; --bg: #f4f6fa;
+    --card: #ffffff; --accent: #2456a6; --now: #e8f0fe; --now-line: #2456a6;
+    --gate: #b45309; --done: #15803d; --hold: #9ca3af;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 32px; background: var(--bg); color: var(--ink);
+         font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif; line-height: 1.6; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 32px 0 12px; border-left: 4px solid var(--accent); padding-left: 10px; }
+  .meta { color: var(--sub); font-size: 13px; margin-bottom: 8px; }
+  .banner { background: var(--now); border: 1px solid var(--now-line); border-radius: 8px;
+            padding: 10px 16px; font-size: 14px; margin: 16px 0; }
+  .flow { display: flex; flex-wrap: wrap; gap: 0; align-items: stretch; margin: 16px 0; }
+  .phase { background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+           padding: 12px 14px; min-width: 150px; flex: 1; position: relative; margin-right: 34px; }
+  .phase::after { content: "→"; position: absolute; right: -26px; top: 50%;
+                  transform: translateY(-50%); color: var(--sub); font-size: 18px; }
+  .phase:last-child { margin-right: 0; }
+  .phase:last-child::after { content: ""; }
+  .phase.done { border-color: var(--done); }
+  .phase.done .status { color: var(--done); }
+  .phase.now { background: var(--now); border: 2px solid var(--now-line); }
+  .phase.now .status { color: var(--now-line); font-weight: 700; }
+  .phase h3 { margin: 0 0 4px; font-size: 14px; }
+  .status { font-size: 12px; color: var(--sub); }
+  .gate { font-size: 12px; color: var(--gate); margin-top: 6px; border-top: 1px dashed var(--line); padding-top: 6px; }
+  .gate::before { content: "🚧 ゲート: "; }
+  table { border-collapse: collapse; width: 100%; background: var(--card); font-size: 13px; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #eef1f7; font-weight: 600; }
+  .adopt { color: var(--done); font-weight: 600; }
+  .hold { color: var(--hold); }
+  .excl { color: var(--sub); text-decoration: line-through; }
+  .approval { margin-top: 40px; background: var(--card); border: 1px solid var(--line);
+              border-radius: 8px; padding: 16px 20px; font-size: 14px; }
+  .note { color: var(--sub); font-size: 12px; margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<h1>{{案件名}} プロジェクト計画</h1>
+<div class="meta">
+  生成日: {{YYYY-MM-DD}} ／ 契約形態: {{請負/準委任}} ／ 出発資産: {{P1〜P6}} ／
+  正本: docs/project-phase.md ＋ テーラリング記録（本HTMLは生成ビュー）
+</div>
+
+<div class="banner">
+  <strong>現在地: {{現在の工程}}</strong>（{{開始日}}〜） ／ 次のゲート: {{次のゲート名・判定予定日}}
+</div>
+
+<h2>工程フロー（{{V字/W字}}）とゲート</h2>
+<div class="flow">
+  <!-- 工程ごとに .phase を置く。完了= class="phase done"、現工程= class="phase now"、
+       スキップする工程は削除し、その判断をテーラリング記録に残す -->
+  <div class="phase done">
+    <h3>要件定義</h3>
+    <div class="status">{{完了 YYYY-MM-DD}}</div>
+    <div class="gate">全MustにAC／テスト計画＋総合テスト仕様ドラフト／非機能に未記入なし</div>
+  </div>
+  <div class="phase now">
+    <h3>基本設計</h3>
+    <div class="status">{{進行中}}</div>
+    <div class="gate">顧客承認（UIありはモック承認）／結合テスト仕様ドラフト／ERD承認</div>
+  </div>
+  <div class="phase">
+    <h3>詳細設計</h3>
+    <div class="status">{{未着手}}</div>
+    <div class="gate">異常系分岐・Tx境界・単体テスト観点あり</div>
+  </div>
+  <div class="phase">
+    <h3>製造・単体</h3>
+    <div class="status">{{未着手}}</div>
+    <div class="gate">Must指摘ゼロ／トレーサビリティ突合（画面・IF×実装）欠落ゼロ</div>
+  </div>
+  <div class="phase">
+    <h3>結合・総合</h3>
+    <div class="status">{{未着手}}</div>
+    <div class="gate">Critical未解決ゼロ／ACトレース済み／性能実測</div>
+  </div>
+  <div class="phase">
+    <h3>受入・納品</h3>
+    <div class="status">{{未着手}}</div>
+    <div class="gate">全◎成果物突合OK／検収基準充足</div>
+  </div>
+</div>
+
+<h2>成果物マップ（どの工程で docs/ のどこに何が生まれるか）</h2>
+<table>
+  <tr><th>工程</th><th>主要成果物（◎必須）</th><th>置き場所</th></tr>
+  <tr><td>要件定義</td><td>機能一覧◎／AC一式◎／非機能◎／テスト計画◎／総合テスト仕様ドラフト◎</td><td>docs/requirements/・docs/test/</td></tr>
+  <tr><td>基本設計</td><td>画面設計◎／HTMLモック◎(UIあり)／IF設計◎／ERD◎／結合テスト仕様ドラフト◎</td><td>docs/basic-design/・docs/erd/・docs/test/integration/</td></tr>
+  <tr><td>詳細設計</td><td>詳細設計書◎（単体テスト観点含む）</td><td>docs/detail-design/</td></tr>
+  <tr><td>製造・単体</td><td>ソース◎／単体成績書◎／突合記録◎</td><td>リポジトリ・docs/test/unit/・docs/project-phase.md</td></tr>
+  <tr><td>結合・総合</td><td>結合/総合成績書◎／運用手順書◎</td><td>docs/test/・docs/operations/</td></tr>
+  <tr><td>受入・納品</td><td>納品物一覧◎／引き継ぎヒストリー◎</td><td>deliverables/・docs/context-history/</td></tr>
+  <!-- テーラリングで増減した成果物を反映すること（deliverables-catalog.md と一致させる） -->
+</table>
+
+<h2>体制（エージェント採用状況）</h2>
+<table>
+  <tr><th>区分</th><th>エージェント</th><th>根拠・復活条件</th></tr>
+  <tr><td class="adopt">採用</td><td>{{leader / documentation-specialist / code-reviewer / ...}}</td><td>{{常時採用}}</td></tr>
+  <tr><td class="hold">保留</td><td>{{incident-responder / ...}}</td><td>{{総合テスト開始時に復帰}}</td></tr>
+  <tr><td class="excl">除外</td><td>{{report-specialist / ...}}</td><td>{{帳票なし。帳票要件が出たら復活}}</td></tr>
+</table>
+
+<div class="approval">
+  <strong>承認</strong> — この計画（工程・ゲート・成果物・体制）で進めることを承認します。<br>
+  承認者: ＿＿＿＿＿＿＿＿ ／ 承認日: ＿＿＿＿＿＿＿＿<br>
+  <span style="color:#5a6478;font-size:12px;">承認記録はテーラリング記録（CLAUDE.md）にも転記すること。以後の変更は再生成＋再承認。</span>
+</div>
+
+<div class="note">
+  本HTMLは docs/project-phase.md とテーラリング記録から生成されるビューです。直接編集せず、
+  工程の進行・テーラリング変更時に project-init の手順で再生成してください。
+</div>
+
+</body>
+</html>
