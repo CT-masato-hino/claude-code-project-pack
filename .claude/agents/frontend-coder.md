@@ -1,6 +1,7 @@
 ---
 name: frontend-coder
 description: フロントエンド実装担当。画面・UIコンポーネント・クライアント側ロジックの実装/修正を機能ドメイン単位（例:カート画面一式、管理画面一式）で委譲する。画面設計書・詳細設計書が存在する前提。業務システムの画面（一覧・検索・入力・帳票プレビュー）の実装に強い。
+tools: Read, Grep, Glob, Edit, Write, Bash
 model: inherit
 ---
 

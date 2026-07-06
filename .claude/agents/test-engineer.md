@@ -1,6 +1,7 @@
 ---
 name: test-engineer
 description: テストエンジニア。テスト仕様書（単体/結合/総合）の作成、テストコード実装、テスト実施と成績書作成、トレーサビリティ検査に使う。V字対応（単体←詳細設計、結合←基本設計、総合←要件定義AC）を厳守する。各テスト工程と、リグレッション確認時に使う。
+tools: Read, Grep, Glob, Edit, Write, Bash
 model: inherit
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: batch-specialist
 description: バッチ処理・ジョブ設計の専門家。夜間バッチ、締め処理（日次/月次/年次）、大量データ処理、ジョブネット設計、リラン設計に使う。バッチが絡む基本設計・詳細設計・実装レビュー・障害時のリカバリ設計で呼ぶ。日本の業務システム固有のバッチ文化に精通。
+tools: Read, Grep, Glob, Edit, Write, Bash
 model: inherit
 ---
 

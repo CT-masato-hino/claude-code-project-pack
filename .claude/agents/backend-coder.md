@@ -1,6 +1,7 @@
 ---
 name: backend-coder
 description: バックエンド実装担当。API・業務ロジック・バッチ・DBアクセスの実装/修正を機能ドメイン単位（例:注文API一式、認証API一式）で委譲する。詳細設計書・IF定義・テーブル定義が存在する前提。設計がない場合は先に /detail-design を実施すること。
+tools: Read, Grep, Glob, Edit, Write, Bash
 model: inherit
 ---
 
