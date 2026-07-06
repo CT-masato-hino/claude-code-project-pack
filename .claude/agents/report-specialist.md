@@ -1,6 +1,7 @@
 ---
 name: report-specialist
 description: 帳票の専門家。帳票設計（レイアウト・改ページ・集計）、帳票実装（PDF/Excel出力）、帳票テスト観点の作成に使う。請求書・納品書・集計表・行政提出様式など、日本の業務帳票の慣習（罫線・和暦・押印欄・鑑）に精通。帳票が絡む全工程で呼ぶ。
+tools: Read, Grep, Glob, Edit, Write, Bash
 model: inherit
 ---
 

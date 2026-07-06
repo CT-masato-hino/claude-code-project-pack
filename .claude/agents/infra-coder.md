@@ -1,6 +1,7 @@
 ---
 name: infra-coder
 description: インフラ実装担当。IaC（Terraform/CloudFormation等）、CI/CD、コンテナ、ネットワーク、監視設定の実装/修正に使う。非機能要件定義書が存在する前提。本番適用（apply/deploy）は行わず、コードとplan結果・適用手順書の作成まで。
+tools: Read, Grep, Glob, Edit, Write, Bash
 model: inherit
 ---
 

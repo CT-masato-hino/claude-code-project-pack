@@ -1,6 +1,7 @@
 ---
 name: migration-specialist
 description: 移行の専門家。データ移行（現行→新システム）、システム切替（一括/段階/並行稼働）、移行リハーサル、切り戻し設計に使う。移行要件定義・移行計画・移行ツール開発・移行判定の全フェーズで呼ぶ。リプレース案件では要件定義から参画させること。
+tools: Read, Grep, Glob, Edit, Write, Bash
 model: inherit
 ---
 

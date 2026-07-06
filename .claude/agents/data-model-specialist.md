@@ -1,6 +1,7 @@
 ---
 name: data-model-specialist
 description: "[横断] データモデル・ERDの専門家。ERD作成/更新、テーブル定義、コード定義、マイグレーション方針、機能間データ整合性の監査に使う。テーブル定義・ERDの変更は必ずこのエージェントを通す（独占管轄）。全機能のデータ整合性の最終責任者。"
+tools: Read, Grep, Glob, Edit, Write, Bash
 model: inherit
 ---
 
