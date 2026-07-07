@@ -77,7 +77,9 @@ INDEX_HTML = r"""<!DOCTYPE html>
           text-overflow:ellipsis; }
   .file:hover { background:var(--hover); }
   .file.selected { background:var(--sel); color:var(--accent); font-weight:600; }
-  .file .icon { flex:none; font-size:13px; }
+  .file .icon { flex:none; width:14px; height:14px; color:#9b9a97; }
+  .file .icon svg { width:100%; height:100%; display:block; }
+  .file.selected .icon { color:var(--accent); }
   .file .ext { color:var(--sub); font-size:11px; margin-left:4px; }
   #content { max-width:880px; margin:0 auto; padding:40px 48px 80px; line-height:1.75;
              font-size:15px; }
@@ -104,14 +106,15 @@ INDEX_HTML = r"""<!DOCTYPE html>
                         color:var(--sub); }
   iframe.htmlview { width:100%; height:100%; border:0; }
   .placeholder { color:var(--sub); padding:80px 40px; text-align:center; font-size:14px; }
-  .placeholder::before { content:"🗂"; display:block; font-size:34px; margin-bottom:12px; }
+  .placeholder::before { content:""; display:block; width:36px; height:36px; margin:0 auto 12px;
+    background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%239b9a97" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>') center / contain no-repeat; }
   .crumb { font-size:12px; color:var(--sub); padding:9px 18px; border-bottom:1px solid var(--line-soft);
            background:rgba(255,255,255,.92); backdrop-filter:blur(4px); position:sticky; top:0; }
 </style>
 </head>
 <body>
 <header>
-  <h1>📁 docs viewer</h1>
+  <h1>docs viewer</h1>
   <span class="sub">レビュー用ビューア（読み取り専用・正本は docs/ 配下のファイル）</span>
 </header>
 <main>
@@ -132,14 +135,27 @@ function el(tag, cls, text) {
 }
 
 // 拡張子ごとの表示アイコン（見た目のみ。機能には影響しない）
+// モノクロのインラインSVG（stroke=currentColor）。絵文字は使わない
+const ICON_PATHS = {
+  doc: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/>',
+  file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
+  code: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
+  image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>',
+  table: '<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>',
+  diagram: '<circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M9 6h6a3 3 0 0 1 3 3v6"/>',
+};
 const FILE_ICONS = {
-  ".md": "📝", ".markdown": "📝", ".html": "🌐", ".htm": "🌐", ".pdf": "📕",
-  ".svg": "🖼️", ".png": "🖼️", ".jpg": "🖼️", ".jpeg": "🖼️", ".gif": "🖼️", ".webp": "🖼️",
-  ".csv": "📊", ".txt": "📃", ".mmd": "🧩",
+  ".md": "doc", ".markdown": "doc", ".txt": "doc", ".pdf": "doc",
+  ".html": "code", ".htm": "code",
+  ".svg": "image", ".png": "image", ".jpg": "image", ".jpeg": "image", ".gif": "image", ".webp": "image",
+  ".csv": "table", ".mmd": "diagram",
 };
 function fileIcon(name) {
   const ext = name.slice(name.lastIndexOf(".")).toLowerCase();
-  return FILE_ICONS[ext] || "📄";
+  const paths = ICON_PATHS[FILE_ICONS[ext] || "file"];
+  const span = el("span", "icon");
+  span.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + paths + "</svg>";
+  return span;
 }
 
 function buildTree(node, container, depth) {
@@ -155,7 +171,7 @@ function buildTree(node, container, depth) {
   });
   (node.files || []).forEach(f => {
     const item = el("div", "file node indent");
-    item.appendChild(el("span", "icon", fileIcon(f.name)));
+    item.appendChild(fileIcon(f.name));
     item.appendChild(document.createTextNode(f.name));
     item.dataset.path = f.path;
     item.onclick = () => select(item, f.path);
