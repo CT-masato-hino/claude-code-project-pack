@@ -28,17 +28,18 @@
          line-height: 1.65; font-size: 14px; -webkit-font-smoothing: antialiased; }
   .page { max-width: 1080px; margin: 0 auto; }
   h1 { font-size: 28px; letter-spacing: -.01em; margin: 0 0 20px; font-weight: 700; }
-  h1::before { content: "📋"; margin-right: 12px; }
   h2 { font-size: 17px; font-weight: 700; margin: 44px 0 14px; padding-bottom: 8px;
        border-bottom: 1px solid var(--line-soft); }
   /* メタ情報: Notionのプロパティ行風 */
   .meta { color: var(--sub); font-size: 13px; margin-bottom: 8px;
           background: var(--card); border: 1px solid var(--line-soft); border-radius: var(--radius);
           box-shadow: var(--shadow); padding: 14px 18px; }
-  /* 現在地バナー: コールアウトブロック */
+  /* 現在地バナー: コールアウトブロック（アイコンはモノクロSVG。絵文字は使わない） */
   .banner { background: var(--accent-soft); border: none; border-radius: var(--radius);
-            padding: 14px 18px 14px 46px; font-size: 14px; margin: 20px 0; position: relative; }
-  .banner::before { content: "📍"; position: absolute; left: 16px; top: 13px; font-size: 16px; }
+            padding: 14px 18px 14px 44px; font-size: 14px; margin: 20px 0; position: relative; }
+  .banner::before { content: ""; position: absolute; left: 16px; top: 50%; margin-top: -8px;
+            width: 16px; height: 16px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23185fac" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>') center / contain no-repeat; }
   /* 工程フロー: ステータスチップつきカード（工程数に応じて等幅グリッド） */
   .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
           gap: 16px 28px; align-items: stretch; margin: 16px 0; }
