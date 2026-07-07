@@ -12,45 +12,77 @@
 <title>{{案件名}} プロジェクト計画</title>
 <style>
   :root {
-    --ink: #1a2233; --sub: #5a6478; --line: #d8dde8; --bg: #f4f6fa;
-    --card: #ffffff; --accent: #2456a6; --now: #e8f0fe; --now-line: #2456a6;
-    --gate: #b45309; --done: #15803d; --hold: #9ca3af;
+    --ink: #37352f; --sub: #787774; --line: rgba(55, 53, 47, .14);
+    --line-soft: rgba(55, 53, 47, .08); --bg: #fbfbfa; --card: #ffffff;
+    --accent: #2383e2; --accent-soft: #e7f1fc;
+    --done: #1c7f4e; --done-soft: #dbeddb;
+    --now: #185fac; --now-soft: #d9e8f8;
+    --todo: #6f6e69; --todo-soft: #efefed;
+    --gate: #9a6700; --gate-soft: #fbf3db;
+    --hold: #9b9a97; --shadow: 0 1px 2px rgba(15, 15, 15, .04), 0 2px 6px rgba(15, 15, 15, .04);
+    --radius: 10px;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; padding: 32px; background: var(--bg); color: var(--ink);
-         font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif; line-height: 1.6; }
-  h1 { font-size: 22px; margin: 0 0 4px; }
-  h2 { font-size: 16px; margin: 32px 0 12px; border-left: 4px solid var(--accent); padding-left: 10px; }
-  .meta { color: var(--sub); font-size: 13px; margin-bottom: 8px; }
-  .banner { background: var(--now); border: 1px solid var(--now-line); border-radius: 8px;
-            padding: 10px 16px; font-size: 14px; margin: 16px 0; }
-  .flow { display: flex; flex-wrap: wrap; gap: 0; align-items: stretch; margin: 16px 0; }
-  .phase { background: var(--card); border: 1px solid var(--line); border-radius: 8px;
-           padding: 12px 14px; min-width: 150px; flex: 1; position: relative; margin-right: 34px; }
-  .phase::after { content: "→"; position: absolute; right: -26px; top: 50%;
-                  transform: translateY(-50%); color: var(--sub); font-size: 18px; }
-  .phase:last-child { margin-right: 0; }
+  body { margin: 0; padding: 48px 40px 64px; background: var(--bg); color: var(--ink);
+         font-family: "Inter", "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+         line-height: 1.65; font-size: 14px; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 1080px; margin: 0 auto; }
+  h1 { font-size: 28px; letter-spacing: -.01em; margin: 0 0 20px; font-weight: 700; }
+  h1::before { content: "📋"; margin-right: 12px; }
+  h2 { font-size: 17px; font-weight: 700; margin: 44px 0 14px; padding-bottom: 8px;
+       border-bottom: 1px solid var(--line-soft); }
+  /* メタ情報: Notionのプロパティ行風 */
+  .meta { color: var(--sub); font-size: 13px; margin-bottom: 8px;
+          background: var(--card); border: 1px solid var(--line-soft); border-radius: var(--radius);
+          box-shadow: var(--shadow); padding: 14px 18px; }
+  /* 現在地バナー: コールアウトブロック */
+  .banner { background: var(--accent-soft); border: none; border-radius: var(--radius);
+            padding: 14px 18px 14px 46px; font-size: 14px; margin: 20px 0; position: relative; }
+  .banner::before { content: "📍"; position: absolute; left: 16px; top: 13px; font-size: 16px; }
+  /* 工程フロー: ステータスチップつきカード（工程数に応じて等幅グリッド） */
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 16px 28px; align-items: stretch; margin: 16px 0; }
+  .phase { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+           box-shadow: var(--shadow); padding: 14px 16px; position: relative; }
+  .phase::after { content: "›"; position: absolute; right: -21px; top: 50%;
+                  transform: translateY(-50%); color: var(--hold); font-size: 22px; font-weight: 300; }
   .phase:last-child::after { content: ""; }
-  .phase.done { border-color: var(--done); }
-  .phase.done .status { color: var(--done); }
-  .phase.now { background: var(--now); border: 2px solid var(--now-line); }
-  .phase.now .status { color: var(--now-line); font-weight: 700; }
-  .phase h3 { margin: 0 0 4px; font-size: 14px; }
-  .status { font-size: 12px; color: var(--sub); }
-  .gate { font-size: 12px; color: var(--gate); margin-top: 6px; border-top: 1px dashed var(--line); padding-top: 6px; }
-  .gate::before { content: "🚧 ゲート: "; }
-  table { border-collapse: collapse; width: 100%; background: var(--card); font-size: 13px; }
-  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
-  th { background: #eef1f7; font-weight: 600; }
+  .phase h3 { margin: 0 0 8px; font-size: 14px; font-weight: 700; }
+  /* ステータスはチップ表示（Backlogの状態ラベル風） */
+  .status { display: inline-block; font-size: 11.5px; font-weight: 600; line-height: 1.6;
+            padding: 1px 9px; border-radius: 999px; background: var(--todo-soft); color: var(--todo);
+            white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+  .phase.done { border-color: var(--line-soft); }
+  .phase.done .status { background: var(--done-soft); color: var(--done); }
+  .phase.done h3::after { content: "✓"; color: var(--done); margin-left: 6px; font-size: 12px; }
+  .phase.now { border: 2px solid var(--accent); box-shadow: 0 2px 10px rgba(35, 131, 226, .18); }
+  .phase.now .status { background: var(--now-soft); color: var(--now); }
+  .gate { font-size: 12px; color: var(--sub); margin-top: 10px;
+          border-top: 1px dashed var(--line); padding-top: 8px; line-height: 1.6; }
+  .gate::before { content: "ゲート"; display: inline-block; background: var(--gate-soft); color: var(--gate);
+                  font-weight: 600; font-size: 11px; padding: 0 8px; border-radius: 999px; margin-right: 6px; }
+  /* 表: 縦罫線なし・行区切りのみ */
+  table { border-collapse: separate; border-spacing: 0; width: 100%; background: var(--card);
+          font-size: 13px; border: 1px solid var(--line-soft); border-radius: var(--radius);
+          box-shadow: var(--shadow); overflow: hidden; }
+  th, td { border: none; border-bottom: 1px solid var(--line-soft); padding: 10px 14px;
+           text-align: left; vertical-align: top; }
+  tr:last-child th, tr:last-child td { border-bottom: none; }
+  th { background: #f7f7f5; font-weight: 600; font-size: 12px; color: var(--sub); white-space: nowrap; }
+  tbody tr:hover td, tr:hover td { background: #fafaf9; }
+  /* 体制表の区分チップ */
   .adopt { color: var(--done); font-weight: 600; }
-  .hold { color: var(--hold); }
+  .adopt::before { content: "●"; font-size: 9px; vertical-align: 2px; margin-right: 6px; }
+  .hold { color: var(--hold); font-weight: 600; }
+  .hold::before { content: "●"; font-size: 9px; vertical-align: 2px; margin-right: 6px; }
   .excl { color: var(--sub); text-decoration: line-through; }
-  .approval { margin-top: 40px; background: var(--card); border: 1px solid var(--line);
-              border-radius: 8px; padding: 16px 20px; font-size: 14px; }
-  .note { color: var(--sub); font-size: 12px; margin-top: 24px; }
+  .approval { margin-top: 44px; background: var(--card); border: 1px solid var(--line);
+              border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 22px; font-size: 14px; }
+  .note { color: var(--sub); font-size: 12px; margin-top: 28px; }
 </style>
 </head>
 <body>
+<div class="page">
 
 <h1>{{案件名}} プロジェクト計画</h1>
 <div class="meta">
@@ -121,7 +153,7 @@
 <div class="approval">
   <strong>承認</strong> — この計画（工程・ゲート・成果物・体制）で進めることを承認します。<br>
   承認者: ＿＿＿＿＿＿＿＿ ／ 承認日: ＿＿＿＿＿＿＿＿<br>
-  <span style="color:#5a6478;font-size:12px;">承認記録はテーラリング記録（CLAUDE.md）にも転記すること。以後の変更は再生成＋再承認。</span>
+  <span style="color:#787774;font-size:12px;">承認記録はテーラリング記録（CLAUDE.md）にも転記すること。以後の変更は再生成＋再承認。</span>
 </div>
 
 <div class="note">
@@ -129,5 +161,6 @@
   工程の進行・テーラリング変更時に project-init の手順で再生成してください。
 </div>
 
+</div>
 </body>
 </html>

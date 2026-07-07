@@ -47,44 +47,66 @@ INDEX_HTML = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>docs viewer</title>
 <style>
-  :root { --line:#d8dde8; --bg:#f4f6fa; --ink:#1a2233; --sub:#5a6478; --accent:#2456a6; --sel:#e8f0fe; }
+  :root { --line:rgba(55,53,47,.14); --line-soft:rgba(55,53,47,.08); --bg:#f7f7f5;
+          --ink:#37352f; --sub:#787774; --accent:#2383e2; --sel:rgba(35,131,226,.1);
+          --hover:rgba(55,53,47,.06); }
   * { box-sizing:border-box; }
   body { margin:0; height:100vh; display:flex; flex-direction:column; color:var(--ink);
-         font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif; }
-  header { padding:10px 16px; border-bottom:1px solid var(--line); background:#fff;
+         font-family:"Inter","Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;
+         -webkit-font-smoothing:antialiased; }
+  header { padding:10px 18px; border-bottom:1px solid var(--line-soft); background:#fff;
            display:flex; align-items:baseline; gap:12px; }
-  header h1 { font-size:15px; margin:0; }
+  header h1 { font-size:14px; font-weight:600; margin:0; }
   header .sub { font-size:12px; color:var(--sub); }
   main { flex:1; display:flex; min-height:0; }
-  #tree { width:300px; min-width:200px; overflow:auto; border-right:1px solid var(--line);
-          background:var(--bg); padding:8px 0; font-size:13px; }
+  #tree { width:280px; min-width:200px; overflow:auto; border-right:1px solid var(--line-soft);
+          background:var(--bg); padding:10px 6px; font-size:13.5px; }
   #view { flex:1; overflow:auto; background:#fff; }
-  .dir > .label { font-weight:600; color:var(--sub); cursor:pointer; }
-  .dir > .label::before { content:"▸ "; }
-  .dir.open > .label::before { content:"▾ "; }
+  .dir > .label { font-weight:500; color:var(--sub); cursor:pointer; border-radius:6px;
+                  padding:3px 8px; display:flex; align-items:center; gap:2px; }
+  .dir > .label:hover { background:var(--hover); }
+  .dir > .label::before { content:"▸"; display:inline-block; width:16px; text-align:center;
+                          font-size:10px; color:var(--sub); transition:transform .12s ease; }
+  .dir.open > .label::before { transform:rotate(90deg); }
   .dir > .children { display:none; }
   .dir.open > .children { display:block; }
-  .node { padding:3px 8px 3px 0; }
-  .indent { padding-left:16px; }
-  .file { cursor:pointer; border-radius:4px; padding:3px 8px; }
-  .file:hover { background:#e9edf5; }
+  .node { padding:1px 0; }
+  .indent { padding-left:14px; }
+  .file { cursor:pointer; border-radius:6px; padding:3px 8px 3px 24px; color:var(--ink);
+          display:flex; align-items:center; gap:6px; white-space:nowrap; overflow:hidden;
+          text-overflow:ellipsis; }
+  .file:hover { background:var(--hover); }
   .file.selected { background:var(--sel); color:var(--accent); font-weight:600; }
+  .file .icon { flex:none; font-size:13px; }
   .file .ext { color:var(--sub); font-size:11px; margin-left:4px; }
-  #content { max-width:900px; margin:0 auto; padding:32px 40px; line-height:1.75; }
-  #content h1,#content h2,#content h3 { line-height:1.4; }
-  #content h1 { border-bottom:1px solid var(--line); padding-bottom:6px; }
-  #content table { border-collapse:collapse; font-size:14px; }
-  #content th,#content td { border:1px solid var(--line); padding:6px 10px; }
-  #content th { background:#eef1f7; }
-  #content pre { background:#f0f2f7; padding:12px; border-radius:6px; overflow:auto; font-size:13px; }
-  #content code { background:#f0f2f7; padding:1px 4px; border-radius:3px; font-size:0.9em; }
-  #content pre code { background:none; padding:0; }
-  #content img { max-width:100%; }
-  #content blockquote { border-left:4px solid var(--line); margin-left:0; padding-left:14px; color:var(--sub); }
+  #content { max-width:880px; margin:0 auto; padding:40px 48px 80px; line-height:1.75;
+             font-size:15px; }
+  #content h1,#content h2,#content h3 { line-height:1.35; font-weight:700; }
+  #content h1 { font-size:1.9em; border-bottom:1px solid var(--line-soft); padding-bottom:8px; }
+  #content h2 { font-size:1.4em; margin-top:1.8em; }
+  #content h3 { font-size:1.15em; }
+  #content a { color:var(--accent); }
+  #content hr { border:none; border-top:1px solid var(--line-soft); margin:2em 0; }
+  #content table { border-collapse:separate; border-spacing:0; font-size:13.5px; width:100%;
+                   border:1px solid var(--line-soft); border-radius:8px; overflow:hidden; }
+  #content th,#content td { border:none; border-bottom:1px solid var(--line-soft); padding:8px 12px;
+                            text-align:left; vertical-align:top; }
+  #content tr:last-child td { border-bottom:none; }
+  #content th { background:var(--bg); font-weight:600; font-size:12.5px; color:var(--sub); }
+  #content tbody tr:hover td { background:#fafaf9; }
+  #content pre { background:#f7f6f3; padding:14px 16px; border-radius:8px; overflow:auto;
+                 font-size:13px; line-height:1.6; }
+  #content code { background:rgba(135,131,120,.15); color:#c25243; padding:1px 5px;
+                  border-radius:4px; font-size:0.88em; }
+  #content pre code { background:none; color:inherit; padding:0; }
+  #content img { max-width:100%; border-radius:6px; }
+  #content blockquote { border-left:3px solid var(--ink); margin-left:0; padding:2px 0 2px 16px;
+                        color:var(--sub); }
   iframe.htmlview { width:100%; height:100%; border:0; }
-  .placeholder { color:var(--sub); padding:40px; text-align:center; }
-  .crumb { font-size:12px; color:var(--sub); padding:8px 16px; border-bottom:1px solid var(--line);
-           background:#fafbfd; position:sticky; top:0; }
+  .placeholder { color:var(--sub); padding:80px 40px; text-align:center; font-size:14px; }
+  .placeholder::before { content:"🗂"; display:block; font-size:34px; margin-bottom:12px; }
+  .crumb { font-size:12px; color:var(--sub); padding:9px 18px; border-bottom:1px solid var(--line-soft);
+           background:rgba(255,255,255,.92); backdrop-filter:blur(4px); position:sticky; top:0; }
 </style>
 </head>
 <body>
@@ -109,6 +131,17 @@ function el(tag, cls, text) {
   return e;
 }
 
+// 拡張子ごとの表示アイコン（見た目のみ。機能には影響しない）
+const FILE_ICONS = {
+  ".md": "📝", ".markdown": "📝", ".html": "🌐", ".htm": "🌐", ".pdf": "📕",
+  ".svg": "🖼️", ".png": "🖼️", ".jpg": "🖼️", ".jpeg": "🖼️", ".gif": "🖼️", ".webp": "🖼️",
+  ".csv": "📊", ".txt": "📃", ".mmd": "🧩",
+};
+function fileIcon(name) {
+  const ext = name.slice(name.lastIndexOf(".")).toLowerCase();
+  return FILE_ICONS[ext] || "📄";
+}
+
 function buildTree(node, container, depth) {
   (node.dirs || []).forEach(d => {
     const wrap = el("div", "dir node indent" + (depth < 1 ? " open" : ""));
@@ -121,7 +154,9 @@ function buildTree(node, container, depth) {
     container.appendChild(wrap);
   });
   (node.files || []).forEach(f => {
-    const item = el("div", "file node indent", f.name);
+    const item = el("div", "file node indent");
+    item.appendChild(el("span", "icon", fileIcon(f.name)));
+    item.appendChild(document.createTextNode(f.name));
     item.dataset.path = f.path;
     item.onclick = () => select(item, f.path);
     container.appendChild(item);
