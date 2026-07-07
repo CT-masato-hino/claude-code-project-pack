@@ -18,6 +18,8 @@
 - **docs/tailoring-guide.md に0節「利用者ロール・体制ギャップによるテーラリング」を新設**（案件規模別構成と直交する軸として整理）。CLAUDE.md.template にも依頼者の主務ロール記載欄とオーケストレーション原則への「体制ギャップ運用」を追加
 - **basic-design のHTMLモック生成フロー拡張**: 調査（既存画面の参照パターン）→複数案実装→提案（理由つき推奨）の流れをui-ux-designer採用時の担い手として明記。保留時はfrontend-coder＋requirements-analystが原則チェックリストを直接適用する代替も明記
 - ui-ux-designerをflow-map・ipa-process-mapping・deliverables-catalog・feature-team.md（複製禁止リスト）に反映
+- **複数人が同時にセッションを操作する体制への対応**: CLAUDE.md.templateの依頼者ロール欄を、複数担当者×主務ドメイン×Leader窓口を記録するチーム体制表に拡張。project-initのブロックD-18を人数・役割の複数人ヒアリングに拡張し、フェーズ3決定表に「Leader窓口を1人に集約する」ルールを追加（全員が独立にフルオーケストレーションすると判断が重複・矛盾するため）。tailoring-guide.mdに0-1節「複数人が同時にセッションを操作する場合」を新設し、feature-team.md（機能ドメイン別スクワッド）とは別軸のロール別分割として整理
+- **`CLAUDE.local.md`（個人ロール宣言・gitignore対象）の公式導入**: 各担当者の役割自認・個人メモの置き場所として案内。あわせて、個人のCLAUDE.local.mdでQCD基準・権限・工程ルールを個人セッションだけ迂回できてしまう新たな穴あけリスクを特定し、`docs/standards/ai-security-baseline.md` に穴あけパターン#11として追加（用途を個人の好み・メモに限定し、矛盾時は共有CLAUDE.mdを優先）。`docs/standards/enterprise-controls.md` の穴あけパターン数表記を10→11に修正し、§C監査証跡にCLAUDE.local.mdが対象外である旨を明記。`/context-health-check` の週次診断項目に自己確認を追加。`tools/audit_pack.py`はCLAUDE.local.mdをスキャン対象から除外し、`.gitignore`にエントリを追加
 
 ## [1.0.5] - 2026-07-07
 
