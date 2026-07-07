@@ -19,7 +19,8 @@
 - **QCD運用の軽量化**: 小規模ではQCD週次レポートを「工程末＋隔週」に減らしてよい（基準そのものは削らない。
   計測頻度のテーラリングとして qcd-standards の記録表に残す）
 - **案件特性で選ぶ**: batch-specialist（バッチがあるなら残す）/ report-specialist（帳票があるなら残す）/
-  migration-specialist・legacy-modernizer（リプレースなら必須、新規開発なら削除）
+  migration-specialist・legacy-modernizer（リプレースなら必須、新規開発なら削除）/
+  ui-ux-designer（UIを持ち専任デザイナーがいるなら残す。専任デザイナー不在ならfrontend-coder＋basic-designの原則チェックリスト直接適用に統合して削る）
 - **絶対に削らない**: /context-history（小規模でも引き継ぎは発生する）、data-model-specialist（DBがあるなら）
 
 ### 中規模（3〜20人月、複数ドメイン）
@@ -34,6 +35,8 @@
 - 横断エージェント（security / architecture / data-model / documentation / operations / incident）は
   **全チーム共通の定義を親リポジトリで一元管理**し、差分が出ないようにする
 - api-designer をチーム間IFの正本管理者として常設する（IF紛争の予防）
+- UIを持つ複数チーム構成では ui-ux-designer を全チーム共通のデザイン判断者として一元管理する
+  （チームごとに複製しない。判断基準を一箇所に足せば全チームに同時に効くレバレッジを優先する）
 - /context-history の頻度を週次→日次に上げる
 
 ## 2. 契約形態別の調整

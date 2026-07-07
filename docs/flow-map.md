@@ -10,7 +10,7 @@ flowchart TD
 
     subgraph LEFT["V字左側（定義・設計）— テスト仕様ドラフトも左側で作る（W字 /test-planning）"]
         BPA["業務分析<br/>business-process-analyst"] --> REQ["要件定義 /requirements-definition<br/>requirements-analyst<br/>＋テスト計画・総合テスト仕様ドラフト"]
-        REQ --> BD["基本設計 /basic-design<br/>api-designer・report-specialist<br/>batch-specialist・architecture-guardian<br/>＋HTMLモック承認（UIあり）・結合テスト仕様ドラフト"]
+        REQ --> BD["基本設計 /basic-design<br/>api-designer・report-specialist<br/>batch-specialist・architecture-guardian<br/>ui-ux-designer（UIあり案件）<br/>＋HTMLモック承認（UIあり）・結合テスト仕様ドラフト"]
         BD --> DD["詳細設計 /detail-design<br/>＋単体テスト観点"]
     end
 

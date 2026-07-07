@@ -16,7 +16,7 @@
 | システム要件定義 | 要件定義（機能一覧・非機能要件） | requirements-analyst（現行調査は legacy-modernizer） | /requirements-definition |
 | システム方式設計 | 基本設計（システム構成・方式） | architecture-guardian / infra-coder | /basic-design |
 | ソフトウェア要件定義 | 要件定義〜基本設計（AC・画面/IF要件） | requirements-analyst | /requirements-definition, /basic-design |
-| ソフトウェア方式設計 | 基本設計（外部設計） | architecture-guardian / api-designer / data-model-specialist / batch-specialist / report-specialist | /basic-design, /erd-update |
+| ソフトウェア方式設計 | 基本設計（外部設計） | architecture-guardian / api-designer / data-model-specialist / batch-specialist / report-specialist / ui-ux-designer（UIあり案件） | /basic-design, /erd-update |
 | ソフトウェア詳細設計 | 詳細設計（内部設計） | backend-coder / frontend-coder（設計） | /detail-design |
 | ソフトウェア構築（コーディング・単体） | 製造・単体テスト | frontend-coder / backend-coder / infra-coder / test-engineer（不具合調査は debugger） | /test-planning（単体） |
 | ソフトウェア結合・ソフトウェア適格性確認 | 結合テスト | test-engineer / api-designer（対向試験） | /test-planning（結合） |
