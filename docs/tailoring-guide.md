@@ -22,8 +22,8 @@
 
 - **Leader窓口を1人に集約する**: 全員が「メインセッションがLeaderを兼ねる」を独立に実践すると、QCD判定・工程ゲート判定が担当者ごとに重複・矛盾する（3人が3通りの黄/赤判定を出す等）。CLAUDE.mdのチーム体制表でLeader窓口（通常は全体管理担当）を1人指定し、他の担当者は自ドメイン内の委譲（担当者Bならfrontend-coder/ui-ux-designer、担当者Cならinfra-coder/architecture-guardianへの委譲）を自分のセッションで完結させる。ドメインを跨ぐ判断（ERD変更・新規パターン導入・QCD赤黄判定・工程ゲート）だけLeader窓口へ渡す
 - **横断エージェント（data-model-specialist・code-reviewer・security-compliance・architecture-guardian・documentation-specialist等）は誰が呼んでもよいが複製しない**（feature-team.mdの複製禁止ルールと同じ発想。正本はdocs/配下の1箇所なので、誰が呼んでも結果は同じ場所に集まる）
-- **各自の役割宣言はCLAUDE.local.mdに書く**: 共有CLAUDE.mdのチーム体制表は全員が見る前提の「事実」を書き、各担当者が個人的に持ちたい役割自認・作業メモ（自分の担当ドメインの詳細、個人的なショートカット等）は各自の`CLAUDE.local.md`（プロジェクトルート、`.gitignore`対象。公式には「個人の好み・メモ用途」）に書く。CLAUDE.local.mdは共有CLAUDE.mdに**追記**される（上書きではない）ため、両方が同時にコンテキストへ入る
-- **CLAUDE.local.mdをQCD基準・権限・工程ルールの迂回に使わない**（docs/standards/ai-security-baseline.md #11）。大規模・監査対応が前提の案件（enterprise-controls適用）では、体制・承認・リスク受容など意思決定に影響する内容は必ず共有CLAUDE.md・docsへ記録し、個人ローカルファイルには置かない（docs/standards/enterprise-controls.md §C）
+- **役割の中身は共有CLAUDE.mdに、CLAUDE.local.mdは宣言だけ**: 役割定義（担当ドメイン・主に使うエージェント・Leader窓口か否か）はロールIDつきで共有CLAUDE.mdのチーム体制表に書く。これは**共有・コミット対象なのでPRレビューとaudit_pack.pyの検査を経由する**——「誰かが変な設定を紛れ込ませても仕組みで引っかかる」を実現するのはこの一手。各担当者の`CLAUDE.local.md`（プロジェクトルート、`.gitignore`対象）には「私のロールID: {{role-B}}」の1行宣言だけを書き、役割の中身は書かない・変更しない。CLAUDE.local.mdは共有CLAUDE.mdに**追記**される（上書きではない）ため、両方が同時にコンテキストへ入るが、正本は常に共有側
+- **CLAUDE.local.mdにロールID宣言以外（QCD基準・権限・工程ルールの緩和等）が書かれていたら書式外として無効扱いし、共有CLAUDE.mdのチーム体制表を優先する**（docs/standards/ai-security-baseline.md #11）。大規模・監査対応が前提の案件（enterprise-controls適用）では、体制・承認・リスク受容など意思決定に影響する内容は必ず共有CLAUDE.md・docsへ記録し、個人ローカルファイルには置かない（docs/standards/enterprise-controls.md §C）
 - この役割別の分割は、feature-team.mdの「機能ドメイン別スクワッド」（例: 認証/受注/請求）とは別の軸。小規模チームが「誰が何をするか」で分かれる場合はこちら、中〜大規模で「どの業務ドメインを並行開発するか」で分かれる場合はfeature-team.mdを使う（併用も可）
 
 ## 1. 案件規模別の推奨構成

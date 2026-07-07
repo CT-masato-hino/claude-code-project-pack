@@ -19,7 +19,7 @@
 - **basic-design のHTMLモック生成フロー拡張**: 調査（既存画面の参照パターン）→複数案実装→提案（理由つき推奨）の流れをui-ux-designer採用時の担い手として明記。保留時はfrontend-coder＋requirements-analystが原則チェックリストを直接適用する代替も明記
 - ui-ux-designerをflow-map・ipa-process-mapping・deliverables-catalog・feature-team.md（複製禁止リスト）に反映
 - **複数人が同時にセッションを操作する体制への対応**: CLAUDE.md.templateの依頼者ロール欄を、複数担当者×主務ドメイン×Leader窓口を記録するチーム体制表に拡張。project-initのブロックD-18を人数・役割の複数人ヒアリングに拡張し、フェーズ3決定表に「Leader窓口を1人に集約する」ルールを追加（全員が独立にフルオーケストレーションすると判断が重複・矛盾するため）。tailoring-guide.mdに0-1節「複数人が同時にセッションを操作する場合」を新設し、feature-team.md（機能ドメイン別スクワッド）とは別軸のロール別分割として整理
-- **`CLAUDE.local.md`（個人ロール宣言・gitignore対象）の公式導入**: 各担当者の役割自認・個人メモの置き場所として案内。あわせて、個人のCLAUDE.local.mdでQCD基準・権限・工程ルールを個人セッションだけ迂回できてしまう新たな穴あけリスクを特定し、`docs/standards/ai-security-baseline.md` に穴あけパターン#11として追加（用途を個人の好み・メモに限定し、矛盾時は共有CLAUDE.mdを優先）。`docs/standards/enterprise-controls.md` の穴あけパターン数表記を10→11に修正し、§C監査証跡にCLAUDE.local.mdが対象外である旨を明記。`/context-health-check` の週次診断項目に自己確認を追加。`tools/audit_pack.py`はCLAUDE.local.mdをスキャン対象から除外し、`.gitignore`にエントリを追加
+- **`CLAUDE.local.md`（gitignore対象）を「ロールID宣言1行のみ」に限定して導入**: 役割の中身（担当ドメイン・主に使うエージェント・Leader窓口か否か）はロールIDつきで共有CLAUDE.mdのチーム体制表（PRレビュー・audit_pack.py対象）に書き、CLAUDE.local.mdは「私のロールID: X」の宣言だけにする設計とした。これにより「個人のCLAUDE.local.mdでQCD基準・権限・工程ルールを個人セッションだけ迂回する」という穴あけリスクを、運用ルールだけでなく構造（正規の内容がロールID1行のみ）でも塞ぐ。`docs/standards/ai-security-baseline.md` に穴あけパターン#11として追加し、`docs/standards/enterprise-controls.md` の穴あけパターン数表記を10→11に修正、§C監査証跡にCLAUDE.local.mdが対象外である旨を明記。`/context-health-check` の週次診断に「ロールID宣言1行以外を含んでいないか」の自己確認を追加。`tools/audit_pack.py`はCLAUDE.local.mdをスキャン対象から除外し、`.gitignore`にエントリを追加
 
 ## [1.0.5] - 2026-07-07
 
