@@ -5,6 +5,25 @@
 
 凡例 — ◎: 必須（検収対象になりうる） / ○: 推奨 / △: 案件により
 
+## 人間承認ビジュアル（ゲート別の標準ビュー — 人間のレビュー速度を上げる）
+
+品質ループのブレーキ役は人間であり、人間の承認スループットが全体の律速になる。各工程ゲートの承認は「文書の通読」ではなく「ビジュアルの確認」でできる状態を標準とする。
+
+- **正本/ビュー分離の原則**: 正本は機械可読なMarkdown/Mermaid（git管理・audit_pack.py対象。AIはこちらを読む）。ビジュアルは正本からの**一方向生成ビュー**（人間はこちらを見る）であり、直接編集禁止・常に再生成可能に保つ（二重正本化の禁止）。承認記録は正本側（各文書の承認欄・project-phase.md）に残す
+- **再承認は差分ベース**: 差し戻し後・変更後の再承認では、前回承認時点からの変更点をビジュアル上で明示する（docs/project-plan.html の再承認運用と同じ。全量を再説明して人間の確認コストを膨らませない）
+- 閲覧は `tools/docs_viewer.py`（Markdown内Mermaid・`.mmd`・HTMLモックをそのまま描画できる）
+
+| 工程ゲート | 承認の入力にするビジュアル | 正本（生成元） | 担い手 |
+|---|---|---|---|
+| テーラリング承認（開始時・変更時） | プロジェクト計画HTML（docs/project-plan.html） | CLAUDE.md・project-phase.md・本カタログ | project-init / ai-dev-standardizer |
+| 要件定義 | 業務フロー図・DFD・機能関連図（Mermaid） | docs/requirements/ | business-process-analyst / requirements-analyst |
+| 基本設計 | 画面遷移図（Mermaid）・HTMLモック・ERD図・アーキテクチャ構成図・インフラ（サービス）構成図 | docs/basic-design/・docs/erd/ | basic-design / ui-ux-designer / data-model-specialist / architecture-guardian / infra-coder |
+| テスト計画（W字の各ドラフト） | テスト構成図（テストレベル×環境×データの対応図） | docs/test/test-plan.md | test-planning / test-engineer |
+| 各テスト完了 | テスト報告サマリ（計画/実施/合否件数・不具合密度の表） | docs/test/<レベル>/ | test-engineer |
+| 工程共通（随時） | 課題トレンド（起票数vs解決数の推移） | docs/issues.md | leader（「品質ループの停止判断」の入力） |
+
+ビジュアル自体の必須度は◎ではなく**ゲート運用の標準**（納品物になるのは正本文書。必須度は下の各工程の表に従う）。例外はUIあり案件のHTMLモックで、従来どおり基本設計の◎。
+
 ## 要件定義
 
 | 成果物 | 必須度 | 正本の場所 | 完了条件 |

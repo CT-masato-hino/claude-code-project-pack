@@ -8,23 +8,12 @@
 
 ## A. 破壊防止ガードレール（3層防御）
 
-### 第1層: 権限deny（settings.json — ai-security-baseline §2に追加する大規模向けセット）
-```json
-{
-  "permissions": {
-    "deny": [
-      "Bash(rm -rf /*)", "Bash(rm -rf ~*)",
-      "Bash(git push --force*)", "Bash(git push -f*)",
-      "Bash(git reset --hard origin*)",
-      "Bash(*DROP TABLE*)", "Bash(*DROP DATABASE*)", "Bash(*TRUNCATE*)",
-      "Bash(terraform apply*)", "Bash(terraform destroy*)",
-      "Bash(kubectl delete*)", "Bash(aws * delete*)"
-    ]
-  }
-}
-```
-- 本番系CLIは deny を既定とし、必要なものだけ環境を限定して allow する（許可の白リスト化）
+### 第1層: 権限deny（settings.json）
+
+破壊防止denyセットの正本は **ai-security-baseline §2「破壊防止deny（規模非依存）」**（破壊事故は規模と無関係に起きるため、全規模共通の最低ラインに置く。中小規模案件もあのセットを省略しない）。大規模ではその上にさらに:
+
 - Enterprise プランでは managed settings 側に置き、個人が外せない状態にする
+- 本番系CLIの deny を案件のクラウド・ミドルウェア構成に合わせて網羅し、必要なものだけ環境を限定して allow する（許可の白リスト化を徹底）
 
 ### 第2層: hooks（PreToolUse による検査。denyで表現しきれないもの）
 - 破壊的SQLパターン（WHERE句なしのUPDATE/DELETE）の実行前ブロック
