@@ -11,6 +11,7 @@
   python3 tools/audit_pack.py            # リポジトリルートで実行（exit 1 = 問題あり）
   AUDIT_KEYWORDS="社名,個人名" python3 tools/audit_pack.py   # 追加の混入検査ワード（カンマ区切り）
 """
+import json
 import os
 import re
 import sys
@@ -21,8 +22,9 @@ issues = []
 
 # 実行時に生成される（パックには同梱されない）ことが仕様のファイル参照
 RUNTIME_ARTIFACTS = {"effort-map.md"}
-# 環境が提供する外部スキル（パック外だが参照してよいもの）
-EXTERNAL_SKILLS = {"design-sync", "design-login", "code-review", "update-config", "loop"}
+# 環境が提供する外部スキル・名前空間（パック外だが参照してよいもの）
+# project-pack はプラグイン導入時のスキル名前空間（.claude-plugin/plugin.json の name）
+EXTERNAL_SKILLS = {"design-sync", "design-login", "code-review", "update-config", "loop", "project-pack"}
 
 agents = sorted((ROOT / ".claude/agents").glob("*.md"))
 skills = sorted((ROOT / ".claude/skills").glob("*/SKILL.md"))
@@ -54,6 +56,31 @@ if m_readme and m_cl and m_readme.group(1) != m_cl.group(1):
     issues.append("版数不一致: README=%s CHANGELOG最新=%s" % (m_readme.group(1), m_cl.group(1)))
 elif not (m_readme and m_cl):
     issues.append("版数表記が見つからない: README=%s CHANGELOG=%s" % (bool(m_readme), bool(m_cl)))
+
+# ---- 1c. 版数・数量整合（プラグインマニフェスト） ----
+pj_path = ROOT / ".claude-plugin/plugin.json"
+if pj_path.is_file():
+    pdata = json.loads(pj_path.read_text(encoding="utf-8"))
+    pv = pdata.get("version")
+    if m_readme and pv != m_readme.group(1):
+        issues.append("版数不一致: plugin.json=%s README=%s" % (pv, m_readme.group(1)))
+    # agents はファイル列挙が必要な仕様のため、実ファイルとの同期を検査する
+    listed = {Path(p).name for p in pdata.get("agents", [])}
+    actual = {a.name for a in agents}
+    for n in sorted(actual - listed):
+        issues.append("plugin.json agents に未掲載: %s" % n)
+    for n in sorted(listed - actual):
+        issues.append("plugin.json agents に実在しないファイル: %s" % n)
+mp_path = ROOT / ".claude-plugin/marketplace.json"
+if mp_path.is_file():
+    mp_text = mp_path.read_text(encoding="utf-8")
+    for pat, actual, label in [
+        (r"サブエージェント(\d+)体", len(agents), "エージェント数"),
+        (r"スキル(\d+)個", len(skills), "スキル数"),
+    ]:
+        for m in re.finditer(pat, mp_text):
+            if int(m.group(1)) != actual:
+                issues.append("marketplace.json %s不一致: 記載=%s 実際=%d" % (label, m.group(1), actual))
 
 # ---- 2. 参照整合 ----
 for f, text in texts.items():

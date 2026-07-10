@@ -1,0 +1,48 @@
+{
+  "name": "project-pack",
+  "version": "1.2.0",
+  "description": "受託開発（SI）向けClaude Codeプロジェクトパック。サブエージェント・スキル・運用標準の一式（IPA共通フレーム2013・V字モデル対応）。正式導入（テーラリング・PRレビュー・整合性監査つき）はリポジトリのクローン方式を推奨 — READMEの導入手順を参照",
+  "author": {
+    "name": "Chapter Tech LLC. (Chapter Tech合同会社)"
+  },
+  "repository": "https://github.com/CT-masato-hino/claude-code-project-pack",
+  "homepage": "https://github.com/CT-masato-hino/claude-code-project-pack#readme",
+  "license": "MIT",
+  "keywords": [
+    "si",
+    "jukutaku",
+    "ipa",
+    "v-model",
+    "qcd",
+    "project-management"
+  ],
+  "agents": [
+    "./.claude/agents/ai-dev-standardizer.md",
+    "./.claude/agents/api-designer.md",
+    "./.claude/agents/architecture-guardian.md",
+    "./.claude/agents/backend-coder.md",
+    "./.claude/agents/batch-specialist.md",
+    "./.claude/agents/business-process-analyst.md",
+    "./.claude/agents/code-reviewer.md",
+    "./.claude/agents/data-model-specialist.md",
+    "./.claude/agents/debugger.md",
+    "./.claude/agents/documentation-specialist.md",
+    "./.claude/agents/estimation-specialist.md",
+    "./.claude/agents/frontend-coder.md",
+    "./.claude/agents/incident-responder.md",
+    "./.claude/agents/infra-coder.md",
+    "./.claude/agents/leader.md",
+    "./.claude/agents/legacy-modernizer.md",
+    "./.claude/agents/migration-specialist.md",
+    "./.claude/agents/operations-designer.md",
+    "./.claude/agents/quality-performance.md",
+    "./.claude/agents/report-specialist.md",
+    "./.claude/agents/requirements-analyst.md",
+    "./.claude/agents/security-compliance.md",
+    "./.claude/agents/test-engineer.md",
+    "./.claude/agents/ui-ux-designer.md"
+  ],
+  "skills": [
+    "./.claude/skills/"
+  ]
+}
