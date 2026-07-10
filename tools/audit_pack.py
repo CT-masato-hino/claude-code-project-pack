@@ -33,7 +33,7 @@ std_names = {s.name for s in standards}
 
 texts = {}
 for f in list(ROOT.rglob("*.md")) + [ROOT / ".mcp.json.template", ROOT / "CLAUDE.md.template"]:
-    if f.is_file() and ".git" not in f.parts and "node_modules" not in f.parts:
+    if f.is_file() and ".git" not in f.parts and "node_modules" not in f.parts and f.name != "CLAUDE.local.md":
         texts[f] = f.read_text(encoding="utf-8")
 
 # ---- 1. 数量整合 ----

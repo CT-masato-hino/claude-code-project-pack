@@ -23,7 +23,7 @@
 | 成果物 | 必須度 | 正本の場所 | 完了条件 |
 |---|---|---|---|
 | 画面設計書 | ◎ | docs/basic-design/screens/ | 項目定義完備・エラー時挙動あり |
-| 画面HTMLモック | ◎（UIあり案件） | docs/basic-design/mockups/ | 全画面分あり・人間がモックを見て承認した記録（正本は画面設計書。モックはレビュー用ビュー） |
+| 画面HTMLモック | ◎（UIあり案件） | docs/basic-design/mockups/ | 全画面分あり・人間がモックを見て承認した記録（正本は画面設計書。モックはレビュー用ビュー）。ui-ux-designer採用時は複数案比較と推奨理由の記録も伴う |
 | 外部IF・API設計書 | ◎ | docs/basic-design/interfaces/ | エラーコード・冪等性・リトライ定義あり |
 | 帳票設計書 | △ | docs/basic-design/reports/ | — |
 | システム方式設計書 | ◎ | docs/basic-design/architecture.md | 非機能要件との対応が明記 |
