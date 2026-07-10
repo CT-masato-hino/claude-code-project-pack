@@ -2,7 +2,7 @@
 
 受託開発の現場でClaude Codeを使うための、サブエージェント・スキル・運用標準の一式です。IPA共通フレーム2013（SLCP-JCF2013）の工程構造と、V字モデル（要件定義 → 基本設計 → 詳細設計 → 製造 → 単体・結合・総合テスト → 受入 → 納品）に対応しています。そのまま使うものではなく、案件ごとにテーラリングして使う前提で設計しています。
 
-現在のバージョン: **1.1.1**（[CHANGELOG](CHANGELOG.md)）
+現在のバージョン: **1.2.0**（[CHANGELOG](CHANGELOG.md)）
 
 - サブエージェント24体 / スキル21個 / 標準ドキュメント8点
 - 実行可能なツールを同梱（Excel変換・スライド生成・整合性監査・docsレビュー用Webビューア）
@@ -264,14 +264,36 @@ claude-code-project-pack/
 
 ## 導入手順
 
-1. 案件リポジトリにパック一式をコピーします。`.claude/` だけでは動きません。エージェントは `docs/standards/` の基準を参照します
-   ```bash
-   cp -r .claude/ /path/to/your-project/.claude/
-   cp -r docs/ /path/to/your-project/docs/
-   cp CLAUDE.md.template .mcp.json.template /path/to/your-project/
-   ```
-2. `/project-init` を実行します。配置漏れの検査からQCD基準の確定までここで済みます
-3. 提案された「最初の一手」から着手します
+導入方法は2つあります。**どちらで入れても、使い始める前に `/project-init` を実行してください**（配置漏れの検査からQCD基準の確定までここで済みます）。
+
+### 方式A: プラグイン導入（お試し・個人利用向けの高速導入路）
+
+Claude Code のプラグイン機構で2コマンドで入ります。バージョン更新も `plugin update` で取り込めます:
+
+```bash
+claude plugin marketplace add CT-masato-hino/claude-code-project-pack
+claude plugin install project-pack@claude-code-project-pack
+```
+
+- スキルは `project-pack:` 名前空間つきになります（例: `/project-pack:project-init`）
+- エージェント・スキルはプラグインのインストール先に置かれるため、**エージェント単位のテーラリング（`.claude/agents.disabled/` への移動）と、案件リポジトリでのPRレビュー・整合性監査の対象にできません**。`docs/standards/` などの正本ドキュメントは /project-init のフェーズ0がプラグインルートから案件リポジトリへコピーします
+
+### 方式B: クローン導入（案件への正式導入 — テーラリング・監査つき）
+
+受託案件ではこちらを使います。パック一式が案件リポジトリにコミットされるため、エージェント定義・共有設定の変更がPRレビューと `audit_pack.py` の検査を通ります（AIセキュリティベースラインの前提）:
+
+```bash
+cp -r .claude/ /path/to/your-project/.claude/
+cp -r docs/ /path/to/your-project/docs/
+cp CLAUDE.md.template .mcp.json.template /path/to/your-project/
+```
+
+`.claude/` だけでは動きません。エージェントは `docs/standards/` の基準を参照します。
+
+### 共通
+
+1. `/project-init` を実行します（方式Aでは `/project-pack:project-init`）
+2. 提案された「最初の一手」から着手します
 
 ## 運用の基本
 
