@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "受託開発（SI）向けClaude Codeプロジェクトパックの配布マーケットプレイス",
-    "version": "1.2.0"
+    "version": "2.0.0"
   },
   "plugins": [
     {
       "name": "project-pack",
       "source": "./",
-      "description": "サブエージェント24体・スキル21個を1プラグインで導入（お試し・個人利用向けの高速導入路）。docs/standards の正本配置は /project-init のフェーズ0が行う。エージェント単位のテーラリングと監査が必要な案件正式導入はクローン方式（README参照）"
+      "description": "サブエージェント24体・スキル21個を1プラグインで導入（お試し・個人利用向けの高速導入路）。docs/90-pack/standards の正本配置は /project-init のフェーズ0が行う。エージェント単位のテーラリングと監査が必要な案件正式導入はクローン方式（README参照）"
     }
   ]
 }

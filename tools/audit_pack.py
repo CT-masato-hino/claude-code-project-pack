@@ -4,12 +4,18 @@
 
 検査項目:
   1. 数量整合   — READMEの記載数（エージェント/スキル）と実ファイル数の一致
-  2. 参照整合   — docs/standards/*.md への参照・スキル参照・エージェント名参照の実在
-  3. 混入検査   — 絶対ローカルパス・メールアドレス・シークレットらしき文字列・任意キーワード
+  2. 参照整合   — docs/90-pack/standards/*.md への参照・スキル参照・エージェント名参照の実在
+  3. 混入検査   — ローカルパス（先頭スラッシュなしの Users/... 形式も対象）・メールアドレス・
+                  シークレットらしき文字列・任意キーワード。エビデンス類（*.log / *.txt）も対象
 
 使い方:
   python3 tools/audit_pack.py            # リポジトリルートで実行（exit 1 = 問題あり）
   AUDIT_KEYWORDS="社名,個人名" python3 tools/audit_pack.py   # 追加の混入検査ワード（カンマ区切り）
+  AUDIT_ALLOWLIST="CT-masato-hino" ...   # キーワード検査から除外する公開情報（GitHubアカウント名等の
+                                         # false positive 回避。カンマ区切り）
+
+導入先の運用: /project-init フェーズ4で AUDIT_KEYWORDS に開発者名・OSユーザー名を必ず登録する
+（成果物の人物表記はロールIDが正。実名・ローカルパスの混入は本監査で検出する）。
 """
 import json
 import os
@@ -21,14 +27,15 @@ ROOT = Path(__file__).resolve().parent.parent
 issues = []
 
 # 実行時に生成される（パックには同梱されない）ことが仕様のファイル参照
-RUNTIME_ARTIFACTS = {"effort-map.md"}
+# （案件生成物は v2.0.0 で docs/90-pack/standards/ の外へ移動したため現在は空）
+RUNTIME_ARTIFACTS = set()
 # 環境が提供する外部スキル・名前空間（パック外だが参照してよいもの）
 # project-pack はプラグイン導入時のスキル名前空間（.claude-plugin/plugin.json の name）
 EXTERNAL_SKILLS = {"design-sync", "design-login", "code-review", "update-config", "loop", "project-pack"}
 
 agents = sorted((ROOT / ".claude/agents").glob("*.md"))
 skills = sorted((ROOT / ".claude/skills").glob("*/SKILL.md"))
-standards = sorted((ROOT / "docs/standards").glob("*.md"))
+standards = sorted((ROOT / "docs/90-pack/standards").glob("*.md"))
 agent_names = {a.stem for a in agents}
 skill_names = {s.parent.name for s in skills}
 std_names = {s.name for s in standards}
@@ -85,7 +92,7 @@ if mp_path.is_file():
 # ---- 2. 参照整合 ----
 for f, text in texts.items():
     rel = f.relative_to(ROOT)
-    for m in re.finditer(r"docs/standards/([\w-]+\.md)", text):
+    for m in re.finditer(r"docs/90-pack/standards/([\w-]+\.md)", text):
         name = m.group(1)
         if name not in std_names and name not in RUNTIME_ARTIFACTS:
             issues.append("実在しない標準への参照: %s (in %s)" % (name, rel))
@@ -103,24 +110,44 @@ for f, text in texts.items():
             issues.append("実在しないエージェント参照?: %s (in %s)" % (name, rel))
 
 # ---- 3. 混入検査 ----
+# ローカルパスは先頭スラッシュなし（スタックトレースの "(Users/xxx/..." 形式）も検出する
 leak_patterns = [
-    (r"/Users/[a-zA-Z0-9_.-]+/", "ローカル絶対パス"),
+    (r"\bUsers/[a-zA-Z0-9_.-]+/", "ローカルパス"),
+    (r"\bhome/[a-zA-Z0-9_.-]+/", "ローカルパス"),
     (r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9.-]+", "メールアドレス"),
     (r"\b(AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{20,}|sk-ant-[A-Za-z0-9-]{20,})\b", "シークレットらしき文字列"),
 ]
+
+
+def is_package_version(match: str) -> bool:
+    """npm等の package@version 表記（marked@12, pkg@^1.2.3 等）をメール検知から除外する。"""
+    domain = match.rsplit("@", 1)[-1]
+    return re.fullmatch(r"[\d.^~x*-]+", domain) is not None
+
+
 extra_keywords = [k.strip() for k in os.environ.get("AUDIT_KEYWORDS", "").split(",") if k.strip()]
+# 公開情報（GitHubアカウント名等）はキーワード検査から除外して false positive を防ぐ
+allow_terms = [a.strip() for a in os.environ.get("AUDIT_ALLOWLIST", "").split(",") if a.strip()]
 scan_targets = dict(texts)
-for f in ROOT.rglob("*.html"):
-    if ".git" not in f.parts:
-        scan_targets[f] = f.read_text(encoding="utf-8")
+# エビデンス類（*.log / *.txt）・HTMLも混入検査の対象にする（テスト実行ログへのパス混入が実例）
+for pattern in ("*.html", "*.log", "*.txt"):
+    for f in ROOT.rglob(pattern):
+        if f.is_file() and ".git" not in f.parts and "node_modules" not in f.parts:
+            scan_targets[f] = f.read_text(encoding="utf-8", errors="replace")
 for f, text in scan_targets.items():
     rel = f.relative_to(ROOT)
     for pat, label in leak_patterns:
         for m in re.finditer(pat, text):
+            if label == "メールアドレス" and is_package_version(m.group(0)):
+                continue
             issues.append("混入検査 %s: '%s' (in %s)" % (label, m.group(0)[:40], rel))
-    for kw in extra_keywords:
-        if kw.lower() in text.lower():
-            issues.append("混入検査 キーワード '%s' (in %s)" % (kw, rel))
+    if extra_keywords:
+        scan_text = text
+        for allow in allow_terms:
+            scan_text = scan_text.replace(allow, "")
+        for kw in extra_keywords:
+            if kw.lower() in scan_text.lower():
+                issues.append("混入検査 キーワード '%s' (in %s)" % (kw, rel))
 
 # ---- 結果 ----
 print("agents=%d skills=%d standards=%d 検査ファイル=%d" % (

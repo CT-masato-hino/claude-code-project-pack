@@ -8,6 +8,7 @@
 - 各基準は「担保エージェント（測る人）」と「判定者（合否を言う人）」を分離する
 - 基準にない指標で合否を語らない。基準に不足があればこのファイルを改訂する（口頭ルール禁止）
 - 未達のまま進める場合は必ず「リスク受容」として leader → 人間 →（顧客影響があれば）顧客合意を記録する
+- **数値なしの合否宣言は無効**（基準ID引用と同格のルール）。週次QCDレポート・ゲート判定記録（project-phase.md の「根拠」列）・成績書は「テスト合格」ではなく「67/67合格・消化率100%」のように実測値で書く。計測系基準（Q-04/Q-05/Q-06等）の値は、成績書冒頭の数値サマリー表（/test-planning）から機械的に転記できる形を正とする
 
 ## Q: 品質基準
 
@@ -21,7 +22,7 @@
 | Q-06 | 不具合密度（結合以降の摘出数/機能） | 計画値±50%の範囲外で分析発動（多い=品質不良疑い / 少ない=テスト不足疑い。**下限割れも異常**） | test-engineer | quality-performance | 各テスト工程完了時 |
 | Q-07 | 性能実測値 | 非機能要件の要件値をp95で充足 | quality-performance | leader | 総合テスト・納品前 |
 | Q-08 | 静的解析の新規警告 | 0件（既存分は棚卸しリスト管理） | quality-performance | code-reviewer | 実装完了ごと |
-| Q-09 | セキュリティCritical/High残存 | 0件（受容は顧客合意記録必須） | security-compliance | 人間 | 工程完了・納品前 |
+| Q-09 | セキュリティCritical/High残存 | 0件（受容は顧客合意記録必須）。**判定根拠はセキュリティ構成図（docs/02-design/security-architecture.md）と攻撃面一覧への突合**（未適用の保護が「受容済みリスク」として記録されているか、検討漏れかを区別する） | security-compliance | 人間 | 工程完了・納品前 |
 | Q-10 | ERD三者一致（ERD↔定義書↔実スキーマ） | 不一致0件 | data-model-specialist | leader | 結合前・納品前 |
 | Q-11 | AI成果物の二重化（生成と検証が別エージェント） | 100% | ai-dev-standardizer | leader | 週次監査 |
 
@@ -51,7 +52,7 @@
 
 ## QCD週次レビュー（運用の型）
 
-週次で以下を1枚に集約し（`docs/standards/qcd-report/YYYYMMDD.md`）、leader が判定、人間が承認する:
+週次で以下を1枚に集約し（`docs/04-reports/qcd/YYYYMMDD.md`）、leader が判定、人間が承認する:
 
 ```markdown
 # QCD週次レポート YYYY-MM-DD

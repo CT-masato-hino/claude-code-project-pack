@@ -16,13 +16,25 @@
   allowlist の書式: 1行1パターン（root からの相対グロブ）。# はコメント。
     例)
       # 顧客レビュー用に公開してよいものだけを明示する
-      basic-design/mockups/*.html
-      requirements/functional-list.md
+      02-design/basic/mockups/*.html
+      01-requirements/functional-list.md
 
 公開統制（重要）: docs/ には個人情報・顧客情報・秘密情報が含まれうる。
 静的ビルドは allowlist に明示されたファイルだけを含める（allowlist なしではビルド不可）。
 Markdown / Mermaid のレンダリングに CDN（jsdelivr の marked / mermaid）を使うため、
 プレビューにはネットワーク接続が必要（文書内容自体が外部送信されることはない）。
+
+ツリー表示: 案件成果物と docs/90-pack/（パック標準・読み取り専用）を2セクションに分けて表示する。
+パック標準セクションはデフォルト折りたたみ（レビュー対象でないものを上に出さない）。
+
+/raw/ のコンテンツネゴシエーション: 生成ビュー（成果物一覧HTML・図の承認ビュー等）内の
+Markdownへの相対リンクはブラウザの通常遷移で /raw/ に直接当たる。Accept: text/html の場合は
+ダウンロードさせず、レンダリングページ（marked＋mermaid）を返す。SPA の fetch（Accept: */*）は
+従来どおり生テキスト。
+
+静的ビルド（--build / GitHub Pages）の既知の制約: 静的サイトでは .md への直リンクは遷移先で
+レンダリングされない（サーバーのコンテンツネゴシエーションが効かないため）。公開対象に
+生成ビュー内の .md リンクが含まれる場合は、ビルド時のHTML変換またはリンク書き換えを検討すること。
 """
 
 import argparse
@@ -39,6 +51,83 @@ VIEW_EXTS = {
     ".md", ".markdown", ".html", ".htm", ".svg", ".png", ".jpg", ".jpeg",
     ".gif", ".webp", ".pdf", ".csv", ".txt", ".mmd",
 }
+
+# パック標準（読み取り専用）の格納ディレクトリ名。ツリーで別セクションに分ける
+PACK_DIR = "90-pack"
+
+# /raw/ へのブラウザ直接遷移（Accept: text/html）に返すMarkdownレンダリングページ。
+# 自分自身を Accept: text/plain で fetch し直して marked＋mermaid（SPAと同じCDN）で描画する。
+RENDER_HTML = r"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>docs viewer</title>
+<style>
+  :root { --line-soft:rgba(55,53,47,.08); --bg:#f7f7f5; --ink:#37352f; --sub:#787774;
+          --accent:#2383e2; }
+  * { box-sizing:border-box; }
+  body { margin:0; color:var(--ink); background:#fff;
+         font-family:"Inter","Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;
+         -webkit-font-smoothing:antialiased; }
+  .crumb { font-size:12px; color:var(--sub); padding:9px 18px; border-bottom:1px solid var(--line-soft);
+           background:rgba(255,255,255,.92); position:sticky; top:0; }
+  .crumb a { color:var(--accent); text-decoration:none; margin-right:12px; }
+  #content { max-width:880px; margin:0 auto; padding:40px 48px 80px; line-height:1.75; font-size:15px; }
+  #content h1,#content h2,#content h3 { line-height:1.35; font-weight:700; }
+  #content h1 { font-size:1.9em; border-bottom:1px solid var(--line-soft); padding-bottom:8px; }
+  #content h2 { font-size:1.4em; margin-top:1.8em; }
+  #content h3 { font-size:1.15em; }
+  #content a { color:var(--accent); }
+  #content table { border-collapse:separate; border-spacing:0; font-size:13.5px; width:100%;
+                   border:1px solid var(--line-soft); border-radius:8px; overflow:hidden; }
+  #content th,#content td { border:none; border-bottom:1px solid var(--line-soft); padding:8px 12px;
+                            text-align:left; vertical-align:top; }
+  #content tr:last-child td { border-bottom:none; }
+  #content th { background:var(--bg); font-weight:600; font-size:12.5px; color:var(--sub); }
+  #content pre { background:#f7f6f3; padding:14px 16px; border-radius:8px; overflow:auto;
+                 font-size:13px; line-height:1.6; }
+  #content code { background:rgba(135,131,120,.15); color:#c25243; padding:1px 5px;
+                  border-radius:4px; font-size:0.88em; }
+  #content pre code { background:none; color:inherit; padding:0; }
+  #content img { max-width:100%; border-radius:6px; }
+  #content blockquote { border-left:3px solid var(--ink); margin-left:0; padding:2px 0 2px 16px;
+                        color:var(--sub); }
+</style>
+</head>
+<body>
+<div class="crumb"><a href="/">&larr; ビューアのトップへ</a><span id="path"></span></div>
+<div id="content">読み込み中…</div>
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({ startOnLoad: false, securityLevel: "strict" });
+const path = decodeURIComponent(location.pathname.replace(/^\/raw\//, ""));
+document.getElementById("path").textContent = path;
+document.title = path + " — docs viewer";
+fetch(location.pathname, { headers: { "Accept": "text/plain" } })
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+  .then(async text => {
+    const content = document.getElementById("content");
+    const ext = path.slice(path.lastIndexOf(".")).toLowerCase();
+    const src = ext === ".mmd" ? "```mermaid\n" + text + "\n```" : text;
+    content.innerHTML = marked.parse(src);
+    const blocks = content.querySelectorAll("pre code.language-mermaid");
+    let i = 0;
+    for (const code of blocks) {
+      const div = document.createElement("div");
+      div.className = "mermaid";
+      div.id = "mmd-" + (i++);
+      div.textContent = code.textContent;
+      code.closest("pre").replaceWith(div);
+    }
+    if (i > 0) { try { await mermaid.run({ querySelector: ".mermaid" }); } catch (e) { console.warn(e); } }
+  })
+  .catch(e => { document.getElementById("content").textContent = "読み込みに失敗しました: " + e.message; });
+</script>
+</body>
+</html>
+"""
 
 INDEX_HTML = r"""<!DOCTYPE html>
 <html lang="ja">
@@ -81,6 +170,11 @@ INDEX_HTML = r"""<!DOCTYPE html>
   .file .icon svg { width:100%; height:100%; display:block; }
   .file.selected .icon { color:var(--accent); }
   .file .ext { color:var(--sub); font-size:11px; margin-left:4px; }
+  .section-label { font-size:11px; font-weight:600; color:var(--sub); padding:10px 8px 3px;
+                   letter-spacing:.02em; display:flex; align-items:center; gap:6px; }
+  .section-label:first-child { padding-top:2px; }
+  .badge { display:inline-block; font-size:10px; font-weight:600; color:var(--sub);
+           background:var(--hover); border-radius:999px; padding:0 7px; line-height:1.7; }
   #content { max-width:880px; margin:0 auto; padding:40px 48px 80px; line-height:1.75;
              font-size:15px; }
   #content h1,#content h2,#content h3 { line-height:1.35; font-weight:700; }
@@ -233,7 +327,19 @@ async function render(path) {
 
 fetch(CONFIG.treeUrl).then(r => r.json()).then(tree => {
   const nav = document.getElementById("tree");
-  buildTree(tree, nav, 0);
+  // 案件成果物とパック標準（読み取り専用）を2セクションに分ける。
+  // パック標準はレビュー対象でないためデフォルト折りたたみで末尾に置く
+  const packDirs = (tree.dirs || []).filter(d => d.name === CONFIG.packDir);
+  const workTree = { dirs: (tree.dirs || []).filter(d => d.name !== CONFIG.packDir),
+                     files: tree.files || [] };
+  nav.appendChild(el("div", "section-label", "案件成果物"));
+  buildTree(workTree, nav, 0);
+  if (packDirs.length) {
+    const label = el("div", "section-label", "パック標準");
+    label.appendChild(el("span", "badge", "読み取り専用"));
+    nav.appendChild(label);
+    buildTree({ dirs: packDirs, files: [] }, nav, 1); // depth=1: 折りたたみで開始
+  }
   // 計画図があればトップページとして開く
   const plan = document.querySelector('.file[data-path="project-plan.html"]');
   if (plan) select(plan, "project-plan.html");
@@ -280,7 +386,8 @@ def safe_resolve(root: Path, rel: str):
 
 
 def make_handler(root: Path):
-    index = INDEX_HTML.replace("__CONFIG__", json.dumps({"treeUrl": "/api/tree", "rawBase": "/raw/"}))
+    index = INDEX_HTML.replace("__CONFIG__", json.dumps(
+        {"treeUrl": "/api/tree", "rawBase": "/raw/", "packDir": PACK_DIR}))
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):  # noqa: N802 (http.server の規約)
@@ -295,7 +402,18 @@ def make_handler(root: Path):
                 if target is None:
                     self._send(404, "text/plain; charset=utf-8", b"not found")
                     return
-                ctype = mimetypes.guess_type(str(target))[0] or "application/octet-stream"
+                suffix = target.suffix.lower()
+                accept = self.headers.get("Accept", "")
+                # コンテンツネゴシエーション: 生成ビュー内リンク等からのブラウザ通常遷移
+                # （Accept: text/html）にはレンダリングページを返す。SPAのfetch（Accept: */*）は生テキスト
+                if suffix in (".md", ".markdown", ".mmd") and "text/html" in accept:
+                    self._send(200, "text/html; charset=utf-8", RENDER_HTML.encode("utf-8"))
+                    return
+                ctype = mimetypes.guess_type(str(target))[0]
+                if not ctype:
+                    # .md 等を octet-stream にしない（直接アクセスでもダウンロードさせない）
+                    ctype = "text/plain" if suffix in (".md", ".markdown", ".mmd", ".txt", ".log") \
+                        else "application/octet-stream"
                 if ctype.startswith("text/") or ctype in ("application/json",):
                     ctype += "; charset=utf-8"
                 self._send(200, ctype, target.read_bytes())
@@ -366,7 +484,8 @@ def build_site(root: Path, out: Path, allowlist: Path):
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(root / rel, dst)
     (out / "tree.json").write_text(json.dumps(tree, ensure_ascii=False), encoding="utf-8")
-    index = INDEX_HTML.replace("__CONFIG__", json.dumps({"treeUrl": "tree.json", "rawBase": "files/"}))
+    index = INDEX_HTML.replace("__CONFIG__", json.dumps(
+        {"treeUrl": "tree.json", "rawBase": "files/", "packDir": PACK_DIR}))
     (out / "index.html").write_text(index, encoding="utf-8")
 
     print(f"静的サイトを生成しました: {out}（{len(files)}ファイル）")

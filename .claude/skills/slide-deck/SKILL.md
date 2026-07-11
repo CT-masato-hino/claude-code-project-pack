@@ -35,7 +35,7 @@ description: 顧客向けスライド資料の作成（Claude Design前提・HTM
 ### 3. 生成
 - `deck-template.html` をコピーし、`/* THEME_CSS_HERE */` に `theme.css` を丸ごとインラインする（単一ファイル納品のため）
 - フッター変数（自社名・機密表記）と表紙（宛先「御中」・機密区分・日付・部署名）を埋める
-- データは正本から引く: 進捗は `docs/context-history/LATEST.md`・課題は `docs/issues.md`・完了判定は leader の判定結果。**スライドのために数字を作らない**
+- データは正本から引く: 進捗は `docs/06-context-history/LATEST.md`・課題は `docs/issues.md`・完了判定は leader の判定結果。**スライドのために数字を作らない**
 - 保存先: `deliverables/slides/YYYYMMDD-<デッキ型>.html`（正本docsとは分離）
 
 ### 4. 検品チェックリスト（必須）

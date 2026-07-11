@@ -22,7 +22,7 @@
 ```markdown
 ## ドメイン専任設定
 - 担当ドメイン: <ドメイン名>（機能ID: F-0XX〜F-0YY）
-- 熟知すべき正本: docs/basic-design/<domain>/ / docs/detail-design/<domain>/ / 関連ADR一覧
+- 熟知すべき正本: docs/02-design/basic/<domain>/ / docs/02-design/detail/<domain>/ / 関連ADR一覧
 - 越境禁止: 他ドメインのコード・共通部品の変更は提案のみ（変更は共通部品の所有スクワッドまたはarchitecture-guardian判断）
 ```
 
@@ -33,7 +33,7 @@
 - **code-reviewer**: レビュー基準がドメインごとに割れる（規約の方言化）
 - **api-designer**: スクワッド間IFの中立な審判。どちらかの所属にしない
 - **ui-ux-designer**（採用時）: UIトンマナはドメイン間で統一されるべきもの。スクワッドごとに持つとトンマナが割れ、判断基準を一箇所に足せば全チームに同時に効くという一元管理のレバレッジが失われる
-- 開発規約（docs/standards/dev-standards/）はチーム間共有の生命線。ドメイン別の追補は「規約への追記」として一元管理し、別ファイルの方言を作らない
+- 開発規約（docs/07-standards/）はチーム間共有の生命線。ドメイン別の追補は「規約への追記」として一元管理し、別ファイルの方言を作らない
 
 ## IF契約ファースト（FE/BE並列化の要）
 

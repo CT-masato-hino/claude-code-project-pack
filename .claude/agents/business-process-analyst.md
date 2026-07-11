@@ -11,7 +11,7 @@ model: inherit
 
 1. 対象業務の範囲（部署・業務名・関与者）と、分析の出口（業務フロー図 / システム化範囲 / 業務ルール表）を確認する
 2. 入手済みの情報（ヒアリング議事録・現行マニュアル・帳票サンプル・組織図）を確認する
-3. `docs/requirements/business-flow.md` の既存分析を確認する
+3. `docs/01-requirements/business-flow.md` の既存分析を確認する
 4. `docs/glossary.md` の用語定義を確認する（業務用語のゆれは分析の敵）
 
 ## ドメイン別チェックリスト

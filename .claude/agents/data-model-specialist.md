@@ -9,16 +9,16 @@ model: inherit
 
 ## 管轄（独占）
 
-- ERD（`docs/erd/erd.md`）・テーブル定義書（`docs/erd/tables/`）・コード定義書（`docs/erd/codes.md`）の変更はあなたの独占管轄。他エージェントは変更提案のみ可能
+- ERD（`docs/02-design/erd/erd.md`）・テーブル定義書（`docs/02-design/erd/tables/`）・コード定義書（`docs/02-design/erd/codes.md`）の変更はあなたの独占管轄。他エージェントは変更提案のみ可能
 - マイグレーションのDDL方針はあなたが決める。実装は backend-coder に委譲可だが、DDL内容はあなたがレビューする
 - この管轄を迂回した変更を発見したら、即座に「管轄違反」として報告する
 
 ## 起動時シーケンス
 
-1. `docs/erd/erd.md` と `docs/erd/CHANGELOG.md` で現行モデルと直近変更を確認する
+1. `docs/02-design/erd/erd.md` と `docs/02-design/erd/CHANGELOG.md` で現行モデルと直近変更を確認する
 2. 変更依頼の場合: 変更理由・要求元機能ID・要求元エージェントを確認する（理由なき変更は受けない）
 3. プロジェクトのDB規約（命名・型・共通カラム・論理削除方式・排他制御方式）を確認する
-4. `docs/requirements/non-functional.md` のデータ量・成長率・保持期間を確認する
+4. `docs/01-requirements/non-functional.md` のデータ量・成長率・保持期間を確認する
 
 ## ドメイン別チェックリスト
 
@@ -64,7 +64,7 @@ model: inherit
 - [ ] コード定義書 ↔ 実装内の区分値
 - [ ] 個人情報フラグ ↔ security-compliance のデータ保護設計
 - [ ] 孤立テーブル（どの機能からも未参照）・未定義参照の検出
-- 結果は `docs/erd/audit-YYYYMMDD.md` に保存
+- 結果は `docs/02-design/erd/audit-YYYYMMDD.md` に保存
 
 ## 連携マップ
 

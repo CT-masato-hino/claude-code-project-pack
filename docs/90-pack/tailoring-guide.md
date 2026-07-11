@@ -20,11 +20,11 @@
 
 例: 3人体制（担当者A=全体管理、担当者B=業務・フロントエンド・UIUX、担当者C=非機能要件・インフラ）で、それぞれが自分のClaude Codeセッションを持つケース。
 
-- **特定の人間を「Leader」に指名する必要はない**: `leader`サブエージェントは呼ばれるたびにCLAUDE.md・`docs/project-phase.md`・`docs/decisions/`・`docs/context-history/LATEST.md`という同じ正本を読んで判断する（`docs/standards/qcd-standards.md`の判定者列も既にほぼ全項目「leader」＝このサブエージェント）。つまり担当者A・B・Cの**誰が呼んでも一貫した判断が返る**ため、「全員が独立にフルオーケストレーションすると判断が重複・矛盾する」という問題は、特定の人間をLeaderに集約しなくても、横断判断の相談先を`leader`サブエージェント1つに統一するだけで解決する。各担当者は自分の主務ドメインの委譲（担当者Bならfrontend-coder/ui-ux-designer、担当者Cならinfra-coder/architecture-guardianへの委譲）を自分のセッションで完結させ、ドメインを跨ぐ判断（QCD判定・工程ゲート・優先順位・リスク裁定）だけ自分のセッションから`leader`に相談すればよい
+- **特定の人間を「Leader」に指名する必要はない**: `leader`サブエージェントは呼ばれるたびにCLAUDE.md・`docs/project-phase.md`・`docs/05-decisions/`・`docs/06-context-history/LATEST.md`という同じ正本を読んで判断する（`docs/90-pack/standards/qcd-standards.md`の判定者列も既にほぼ全項目「leader」＝このサブエージェント）。つまり担当者A・B・Cの**誰が呼んでも一貫した判断が返る**ため、「全員が独立にフルオーケストレーションすると判断が重複・矛盾する」という問題は、特定の人間をLeaderに集約しなくても、横断判断の相談先を`leader`サブエージェント1つに統一するだけで解決する。各担当者は自分の主務ドメインの委譲（担当者Bならfrontend-coder/ui-ux-designer、担当者Cならinfra-coder/architecture-guardianへの委譲）を自分のセッションで完結させ、ドメインを跨ぐ判断（QCD判定・工程ゲート・優先順位・リスク裁定）だけ自分のセッションから`leader`に相談すればよい
 - **人間専管事項だけは窓口を1人指定する**: 契約影響・費用影響・リスク受容・顧客提出・検収判定など、AIには判断できず人間だけが決められる事項（enterprise-controls.md §D 職務分掌、既存の「運用の基本」原則）は、`leader`サブエージェントでは完結しない。CLAUDE.mdのチーム体制表に「人間専管事項の窓口」を1人（通常は顧客折衝を担う全体管理担当）指定し、そこへ最終エスカレーションする
 - **横断エージェント（data-model-specialist・code-reviewer・security-compliance・architecture-guardian・documentation-specialist等）は誰が呼んでもよいが複製しない**（feature-team.mdの複製禁止ルールと同じ発想。正本はdocs/配下の1箇所なので、誰が呼んでも結果は同じ場所に集まる）
 - **役割の中身は共有CLAUDE.mdに、CLAUDE.local.mdは宣言だけ**: 役割定義（担当ドメイン・主に使うエージェント）はロールIDつきで共有CLAUDE.mdのチーム体制表に書く。これは**共有・コミット対象なのでPRレビューとaudit_pack.pyの検査を経由する**——「誰かが変な設定を紛れ込ませても仕組みで引っかかる」を実現するのはこの一手。各担当者の`CLAUDE.local.md`（プロジェクトルート、`.gitignore`対象）には「私のロールID: {{role-B}}」の1行宣言だけを書き、役割の中身は書かない・変更しない。CLAUDE.local.mdは共有CLAUDE.mdに**追記**される（上書きではない）ため、両方が同時にコンテキストへ入るが、正本は常に共有側
-- **CLAUDE.local.mdにロールID宣言以外（QCD基準・権限・工程ルールの緩和等）が書かれていたら書式外として無効扱いし、共有CLAUDE.mdのチーム体制表を優先する**（docs/standards/ai-security-baseline.md #11）。大規模・監査対応が前提の案件（enterprise-controls適用）では、体制・承認・リスク受容など意思決定に影響する内容は必ず共有CLAUDE.md・docsへ記録し、個人ローカルファイルには置かない（docs/standards/enterprise-controls.md §C）
+- **CLAUDE.local.mdにロールID宣言以外（QCD基準・権限・工程ルールの緩和等）が書かれていたら書式外として無効扱いし、共有CLAUDE.mdのチーム体制表を優先する**（docs/90-pack/standards/ai-security-baseline.md #11）。大規模・監査対応が前提の案件（enterprise-controls適用）では、体制・承認・リスク受容など意思決定に影響する内容は必ず共有CLAUDE.md・docsへ記録し、個人ローカルファイルには置かない（docs/90-pack/standards/enterprise-controls.md §C）
 - この役割別の分割は、feature-team.mdの「機能ドメイン別スクワッド」（例: 認証/受注/請求）とは別の軸。小規模チームが「誰が何をするか」で分かれる場合はこちら、中〜大規模で「どの業務ドメインを並行開発するか」で分かれる場合はfeature-team.mdを使う（併用も可）
 
 ## 1. 案件規模別の推奨構成
@@ -50,7 +50,7 @@
 - 案件特性に無い領域だけ削る（帳票なし→report-specialist、移行なし→migration-specialist/legacy-modernizer、
   保守フェーズ未受託→incident-responderは総合テスト以降まで保留）
 - 機能ドメインが多い場合、coder系を複製してドメイン専任化してよい
-  （例: `backend-coder-auth.md` を作り「認証ドメイン専任。docs/basic-design/auth/ を熟知」と追記）
+  （例: `backend-coder-auth.md` を作り「認証ドメイン専任。docs/02-design/basic/auth/ を熟知」と追記）
 
 ### 大規模（20人月〜、複数チーム）
 - チーム（会社）境界ごとに本パックを複製し、リポジトリ分割する
@@ -72,7 +72,7 @@
 
 ## 3. 顧客標準がある場合
 
-1. 顧客の開発標準（工程名・成果物様式・レビュー規程）を `docs/customer-standard/` に配置する
+1. 顧客の開発標準（工程名・成果物様式・レビュー規程）を `docs/10-management/customer-standard/` に配置する
 2. 各スキルのテンプレート部分を顧客様式に差し替える（スキルの手順・完了条件は残す）
 3. 工程名の読み替え表を CLAUDE.md に追記する（例: 顧客標準「外部設計」= 本パック「基本設計」）
 4. 成果物カタログ（deliverables-catalog.md）を顧客の納品物リストで上書きする
@@ -84,7 +84,7 @@
 - **ERD変更のdata-model-specialist独占ルール** — データ不整合は後工程で最も高くつく
 - **AC中心の要件定義** — テスト可能性が検収可能性に直結する
 - **サブエージェントの「要約のみ報告」ルール** — 各エージェント定義の報告形式節を消さない
-- **正本/ビュー分離（レビュー用ビジュアルの手編集禁止）** — レビュー用HTML・図を直接編集した瞬間に二重正本化し、AIが読む正本と人間が見る絵が乖離し始める（docs/deliverables-catalog.md「人間承認ビジュアル」参照）
+- **正本/ビュー分離（レビュー用ビジュアルの手編集禁止）** — レビュー用HTML・図を直接編集した瞬間に二重正本化し、AIが読む正本と人間が見る絵が乖離し始める（docs/90-pack/deliverables-catalog.md「人間承認ビジュアル」参照）
 
 ## 5. 足すことが多いもの
 

@@ -43,7 +43,7 @@ model: inherit
 
 ## ワークフロー
 
-**フェーズ1 設計**: 起動時シーケンス → IF一覧の整備 → IF定義書作成（`docs/basic-design/interfaces/`）
+**フェーズ1 設計**: 起動時シーケンス → IF一覧の整備 → IF定義書作成（`docs/02-design/basic/interfaces/`）
 **フェーズ2 調整**: 連携先向け調整資料 → 合意事項の反映・版数管理
 **フェーズ3 検証支援**: 疎通・対向試験の観点を test-engineer へ → 実装の突合レビューを code-reviewer と分担
 

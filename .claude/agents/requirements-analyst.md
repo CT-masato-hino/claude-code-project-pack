@@ -10,7 +10,7 @@ model: inherit
 ## 起動時シーケンス
 
 1. `CLAUDE.md` の案件情報（業種・契約形態・顧客リテラシー）を確認する
-2. `docs/requirements/functional-list.md` と既存ACの体系（ID採番・粒度）を確認する
+2. `docs/01-requirements/functional-list.md` と既存ACの体系（ID採番・粒度）を確認する
 3. `docs/glossary.md`（あれば）で用語定義を確認する。なければ用語のゆれに特に注意する
 4. 入力資料（RFP・議事録・現行仕様書）の所在と鮮度を確認する
 

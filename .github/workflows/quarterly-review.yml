@@ -56,8 +56,8 @@ jobs:
             cat mcp_report.md
             echo ""
             echo "## 2. 陳腐化しやすいドキュメントの点検"
-            echo "- [ ] docs/standards/ai-security-baseline.md — Claudeプラン別機能（managed settings等）が最新のAnthropicドキュメントと一致しているか"
-            echo "- [ ] docs/standards/enterprise-controls.md — 新しい穴あけパターン・ヒヤリハット台帳からの反映漏れがないか"
+            echo "- [ ] docs/90-pack/standards/ai-security-baseline.md — Claudeプラン別機能（managed settings等）が最新のAnthropicドキュメントと一致しているか"
+            echo "- [ ] docs/90-pack/standards/enterprise-controls.md — 新しい穴あけパターン・ヒヤリハット台帳からの反映漏れがないか"
             echo "- [ ] .mcp.json.template — プレースホルダーのパッケージ名をregistryで再確認"
             echo "- [ ] README 4層モデル — ハーネス/ループ層の記述が現行のClaude Code機能と乖離していないか"
             echo ""
