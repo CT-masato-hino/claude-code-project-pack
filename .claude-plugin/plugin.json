@@ -1,6 +1,6 @@
 {
   "name": "project-pack",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "受託開発（SI）向けClaude Codeプロジェクトパック。サブエージェント・スキル・運用標準の一式（IPA共通フレーム2013・V字モデル対応）。正式導入（テーラリング・PRレビュー・整合性監査つき）はリポジトリのクローン方式を推奨 — READMEの導入手順を参照",
   "author": {
     "name": "Chapter Tech LLC. (Chapter Tech合同会社)"

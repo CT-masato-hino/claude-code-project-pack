@@ -5,17 +5,18 @@ description: 要件定義書の作成・更新。ユーザーストーリーのA
 
 # 要件定義スキル
 
-要件定義書一式を `docs/requirements/` 配下に作成・更新する。作業は原則 requirements-analyst サブエージェントへ委譲し、このスキルはテンプレートと手順を定める。
+要件定義書一式を `docs/01-requirements/` 配下に作成・更新する。作業は原則 requirements-analyst サブエージェントへ委譲し、このスキルはテンプレートと手順を定める。
 
 ## 手順
 
 1. 入力を確認する: 顧客要望・RFP・議事録・既存システム資料。不足していればユーザーに何があるか確認する
 2. requirements-analyst に以下を順に作らせる:
-   - `docs/requirements/functional-list.md` — 機能一覧（後述テンプレ）
-   - `docs/requirements/acceptance-criteria/<機能ID>.md` — 機能ごとのAC
-   - `docs/requirements/non-functional.md` — 非機能要件（IPA非機能要求グレード6大項目）
+   - `docs/01-requirements/functional-list.md` — 機能一覧（後述テンプレ）
+   - `docs/01-requirements/acceptance-criteria/<機能ID>.md` — 機能ごとのAC
+   - `docs/01-requirements/non-functional.md` — 非機能要件（IPA非機能要求グレード6大項目）
    - `docs/open-questions.md` — 曖昧さ指摘・確認事項（顧客に投げられる質問文で）
 3. 曖昧さ指摘のうち重要なものトップ5をユーザーに提示し、顧客確認の要否を仰ぐ
+3-2. 各文書の冒頭に「レビュアー向けサマリ」欄を置く（deliverables-catalog の共通規約: 前版差分 / 判断ポイント3〜5点 / 影響Q-ID・基準ID / 最小読解セット）。逆生成・ドラフトは「1ファイルに全部」ではなく承認単位で分割する。ゲート承認時はAC一覧・トレーサビリティ表のHTMLビュー（正本からの一方向生成）を承認の入力にする
 4. **テスト計画のシフトレフト（W字）**: 要件定義の完了前に `/test-planning` を呼び、テスト計画書（全体）と総合テスト仕様書ドラフト（要件ACベース）を作成する。ドラフト作成で見つかった「テストできないAC」「実測できない完了条件」は要件側に差し戻して完了前に直す
 5. documentation-specialist に変更履歴・版数を整えさせる
 
@@ -91,4 +92,4 @@ description: 要件定義書の作成・更新。ユーザーストーリーのA
 - 全機能にACが存在し、Thenがすべて観測可能な形式である
 - 非機能6大項目に「未記入」がない（仮置きは可）
 - open-questions の Must 機能に関わる項目がゼロ、または顧客確認中である
-- テスト計画書（`docs/test/test-plan.md`）と総合テスト仕様書ドラフトが存在し、全Must機能のACがドラフトにトレースされている（W字対応）
+- テスト計画書（`docs/03-test/test-plan.md`）と総合テスト仕様書ドラフトが存在し、全Must機能のACがドラフトにトレースされている（W字対応）

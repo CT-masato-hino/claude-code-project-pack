@@ -44,7 +44,7 @@
 - 保存期間: 案件の契約保存義務に合わせる（最低でも検収後1年を推奨。顧客要件が優先）
 - Enterprise プランでは組織の監査ログ機能を一次証跡とし、上記はプロジェクト側の突合材料とする
 - 監査で答えられるべき質問を定義しておく: 「この納品コードは誰が書き、誰がレビューし、どのテストで検証されたか」に成果物IDから辿って答えられること（トレーサビリティの背骨がそのまま監査証跡になる）
-- **`CLAUDE.local.md`（個人ローカル・gitignore対象）は監査証跡の対象外**になる。体制・承認・リスク受容など意思決定に影響する内容は必ず共有CLAUDE.md・docsへ記録し、CLAUDE.local.mdには置かない（個人の好み・メモに限定。docs/standards/ai-security-baseline.md #11）
+- **`CLAUDE.local.md`（個人ローカル・gitignore対象）は監査証跡の対象外**になる。体制・承認・リスク受容など意思決定に影響する内容は必ず共有CLAUDE.md・docsへ記録し、CLAUDE.local.mdには置かない（個人の好み・メモに限定。docs/90-pack/standards/ai-security-baseline.md #11）
 
 ## D. 職務分掌（SoD）
 

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--
+  claude-code-project-pack: 成果物一覧テンプレート
+  documentation-specialist が docs/deliverables-ledger.md（正本）から docs/deliverables-index.html として生成する。
+  このHTMLは一方向生成ビュー（直接編集しない。確認状態の変更は台帳側に記録して再生成する）。
+  {{ }} を台帳の実データで置換すること。行の class:
+    - 人間確認のチップ: ok（確認済み）/ pending（未確認）/ cond（条件付きOK）
+    - 鮮度切れ（確認済みなのに更新日 > OK日付）の行には tr に class="stale" を付ける
+  アイコン・装飾に絵文字を使わない（必要ならモノクロSVG/CSS図形）。
+-->
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{案件名}} 成果物一覧</title>
+<style>
+  :root {
+    --ink: #37352f; --sub: #787774; --line: rgba(55, 53, 47, .14);
+    --line-soft: rgba(55, 53, 47, .08); --bg: #fbfbfa; --card: #ffffff;
+    --accent: #2383e2;
+    --ok: #1c7f4e; --ok-soft: #dbeddb;
+    --pending: #6f6e69; --pending-soft: #efefed;
+    --cond: #9a6700; --cond-soft: #fbf3db;
+    --stale: #c25243; --stale-soft: #fdebec;
+    --pack: #9b9a97; --pack-soft: #f1f1ef;
+    --shadow: 0 1px 2px rgba(15, 15, 15, .04), 0 2px 6px rgba(15, 15, 15, .04);
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 48px 40px 64px; background: var(--bg); color: var(--ink);
+         font-family: "Inter", "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+         line-height: 1.65; font-size: 14px; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 1180px; margin: 0 auto; }
+  h1 { font-size: 26px; letter-spacing: -.01em; margin: 0 0 14px; font-weight: 700; }
+  h2 { font-size: 16px; font-weight: 700; margin: 40px 0 12px; padding-bottom: 8px;
+       border-bottom: 1px solid var(--line-soft); }
+  .meta { color: var(--sub); font-size: 13px; margin-bottom: 20px;
+          background: var(--card); border: 1px solid var(--line-soft); border-radius: var(--radius);
+          box-shadow: var(--shadow); padding: 12px 18px; }
+  /* サマリーカード（未確認・鮮度切れの残数を先頭で見せる） */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 18px 0 28px; }
+  .stat { background: var(--card); border: 1px solid var(--line-soft); border-radius: var(--radius);
+          box-shadow: var(--shadow); padding: 12px 16px; }
+  .stat .num { font-size: 24px; font-weight: 700; }
+  .stat .label { font-size: 12px; color: var(--sub); }
+  .stat.warn .num { color: var(--stale); }
+  table { border-collapse: separate; border-spacing: 0; width: 100%; background: var(--card);
+          font-size: 13px; border: 1px solid var(--line-soft); border-radius: var(--radius);
+          box-shadow: var(--shadow); overflow: hidden; }
+  th, td { border: none; border-bottom: 1px solid var(--line-soft); padding: 9px 13px;
+           text-align: left; vertical-align: top; }
+  tr:last-child th, tr:last-child td { border-bottom: none; }
+  th { background: #f7f7f5; font-weight: 600; font-size: 12px; color: var(--sub); white-space: nowrap; }
+  tbody tr:hover td { background: #fafaf9; }
+  td a { color: var(--accent); text-decoration: none; }
+  td a:hover { text-decoration: underline; }
+  .chip { display: inline-block; font-size: 11.5px; font-weight: 600; line-height: 1.6;
+          padding: 1px 9px; border-radius: 999px; white-space: nowrap; }
+  .chip.ok { background: var(--ok-soft); color: var(--ok); }
+  .chip.pending { background: var(--pending-soft); color: var(--pending); }
+  .chip.cond { background: var(--cond-soft); color: var(--cond); }
+  .chip.pack { background: var(--pack-soft); color: var(--pack); }
+  .chip.stale { background: var(--stale-soft); color: var(--stale); }
+  /* 鮮度切れ行: 確認済みなのに更新日 > OK日付 */
+  tr.stale td { background: var(--stale-soft); }
+  tr.stale:hover td { background: #fbdfe0; }
+  .phase-label { font-size: 12px; color: var(--sub); white-space: nowrap; }
+  .note { color: var(--sub); font-size: 12px; margin-top: 28px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>{{案件名}} 成果物一覧</h1>
+<div class="meta">
+  生成日: {{YYYY-MM-DD}} ／ 正本: docs/deliverables-ledger.md（このページは一方向生成ビュー。直接編集しない）
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="num">{{総数}}</div><div class="label">案件成果物（総数）</div></div>
+  <div class="stat"><div class="num">{{確認済み数}}</div><div class="label">人間確認済み</div></div>
+  <div class="stat warn"><div class="num">{{未確認数}}</div><div class="label">未確認（レビュー待ち）</div></div>
+  <div class="stat warn"><div class="num">{{鮮度切れ数}}</div><div class="label">鮮度切れ（確認後に更新あり）</div></div>
+</div>
+
+<h2>案件成果物（工程順）</h2>
+<table>
+  <thead>
+    <tr><th>成果物名</th><th>工程</th><th>更新日</th><th>人間確認</th><th>OK日付</th><th>確認者</th><th>備考</th></tr>
+  </thead>
+  <tbody>
+    <!-- 台帳の記載順（工程順）で1行ずつ。リンクは実ファイルへの相対パス -->
+    <tr>
+      <td><a href="{{01-requirements/functional-list.md}}">{{機能一覧}}</a></td>
+      <td class="phase-label">{{要件定義}}</td>
+      <td>{{YYYY-MM-DD}}</td>
+      <td><span class="chip ok">確認済み</span></td>
+      <td>{{YYYY-MM-DD}}</td>
+      <td>{{role-A}}</td>
+      <td>{{—}}</td>
+    </tr>
+    <tr class="stale">
+      <td><a href="{{02-design/basic/screens/SCR-001.md}}">{{画面設計書 SCR-001}}</a></td>
+      <td class="phase-label">{{基本設計}}</td>
+      <td>{{YYYY-MM-DD}}</td>
+      <td><span class="chip stale">鮮度切れ</span></td>
+      <td>{{YYYY-MM-DD}}</td>
+      <td>{{role-B}}</td>
+      <td>{{確認後に更新あり。再確認が必要}}</td>
+    </tr>
+    <tr>
+      <td><a href="{{03-test/unit/F-001.md}}">{{単体テスト成績書 F-001}}</a></td>
+      <td class="phase-label">{{製造・単体}}</td>
+      <td>{{YYYY-MM-DD}}</td>
+      <td><span class="chip pending">未確認</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>パック標準（読み取り専用 — レビュー対象外）</h2>
+<table>
+  <thead>
+    <tr><th>名称</th><th>区分</th><th>場所</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>パック標準一式（QCD基準・テーラリングガイド・成果物カタログ 等）</td>
+        <td><span class="chip pack">パック標準</span></td>
+        <td><a href="90-pack/">docs/90-pack/</a></td></tr>
+  </tbody>
+</table>
+
+<div class="note">
+  凡例: 確認済み＝人間がレビューしOKにした ／ 未確認＝レビュー待ち ／ 条件付きOK＝条件は備考に ／
+  鮮度切れ＝確認済みなのに更新日がOK日付より新しい（再確認が必要）。<br>
+  確認状態の変更は台帳（docs/deliverables-ledger.md）に記録して再生成する。確認者はロールIDで記載（実名を書かない）。
+</div>
+
+</div>
+</body>
+</html>

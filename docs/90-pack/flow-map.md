@@ -19,10 +19,11 @@ flowchart TD
     subgraph RIGHT["V字右側（検証）"]
         UT["単体テスト"] --> IT["結合テスト"]
         IT --> ST["総合テスト<br/>quality-performance（Q-07）"]
-        ST --> UAT["受入支援・移行<br/>migration-specialist /migration-planning"]
+        ST --> PUAT["プレUAT（任意）<br/>ローカル一気通貫の使用感確認<br/>合否記録なし・検収対象外"]
+        PUAT --> UAT["受入支援・移行<br/>migration-specialist /migration-planning"]
     end
 
-    IMP --> TRC["トレーサビリティ突合<br/>画面・IF×実装（leaderゲート）"] --> UT
+    IMP --> TRC["トレーサビリティ突合<br/>画面・IF×実装（leaderゲート）<br/>＋ローカルUI目視チェック（UIあり案件）"] --> UT
     UAT --> DEL["納品 /delivery-package<br/>→ 保守 incident-responder"]
 
     DD -.検証根拠.-> UT
@@ -38,20 +39,21 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    subgraph STD["docs/standards/（基準の正本）"]
+    subgraph STD["docs/90-pack/standards/（パック由来・読み取り専用）"]
         QCD["qcd-standards.md<br/>Q/C/D 21基準"]
         ASM["assumption-management.md<br/>仮定・Q-IDマーカー"]
-        DEV["dev-standards/<br/>開発規約12種 /dev-standards"]
         SECB["ai-security-baseline.md<br/>enterprise-controls.md"]
     end
 
-    subgraph WORK["docs/（案件の正本）"]
-        REQD["requirements/ 機能一覧・AC"]
-        DESIGN["basic-design/ detail-design/"]
-        ERDD["erd/ テーブル定義・CHANGELOG"]
+    subgraph WORK["docs/（案件の正本・工程順ナンバリング）"]
+        REQD["01-requirements/ 機能一覧・AC"]
+        DESIGN["02-design/ basic・detail・erd<br/>security-architecture.md"]
+        DEV["07-standards/<br/>開発規約12種 /dev-standards"]
+        RPT["04-reports/ 階層レポート<br/>overall・phase・agent・qcd"]
         OQ["open-questions.md（Q-ID台帳）"]
-        ADR["decisions/（ADR）"]
-        HIST["context-history/LATEST.md"]
+        LGR["deliverables-ledger.md（成果物台帳）<br/>→ deliverables-index.html（一覧ビュー）"]
+        ADR["05-decisions/（ADR）"]
+        HIST["06-context-history/LATEST.md"]
     end
 
     subgraph OUT["deliverables/（出力形式）"]
@@ -61,8 +63,10 @@ flowchart LR
 
     QCD --> |合否の照合先| WORK
     DEV --> |実装の照合先| DESIGN
-    REQD --> |機能IDトレース| DESIGN --> |項番トレース| ERDD
+    REQD --> |機能IDトレース| DESIGN
     OQ --> |仮定マーカー| DESIGN
+    WORK --> |作成・更新を台帳へ記録| LGR
+    WORK --> |ゲートごとに数値つき報告| RPT
     WORK --> |変換・体裁| OUT
     WORK --> |決定を外部化| ADR --> HIST
     HIST --> |新セッションの入口| WORK

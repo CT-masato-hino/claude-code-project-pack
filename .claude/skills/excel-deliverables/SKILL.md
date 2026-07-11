@@ -26,7 +26,7 @@ description: Excel成果物変換。Markdown正本（設計書・テスト仕様
 
 ```bash
 python3 .claude/skills/excel-deliverables/scripts/md_to_excel.py \
-  docs/basic-design/screens/SCR-001.md \
+  docs/02-design/basic/screens/SCR-001.md \
   -o deliverables/YYYYMMDD/SCR-001_画面設計書.xlsx \
   --project "{{案件名}}" --author "{{作成者}}" --approver "{{承認者}}" \
   --doc-version "1.0" --font "游ゴシック"
@@ -54,7 +54,7 @@ python3 .claude/skills/excel-deliverables/scripts/excel_to_md.py \
   受領物/SCR-001_画面設計書_顧客修正.xlsx -o /tmp/scr-001-returned.md
 
 # 2. 正本との差分確認（変更点の洗い出し）
-diff docs/basic-design/screens/SCR-001.md /tmp/scr-001-returned.md
+diff docs/02-design/basic/screens/SCR-001.md /tmp/scr-001-returned.md
 ```
 
 - 差分は機械的に正本へ上書きせず、1件ずつ判定する:
@@ -67,7 +67,7 @@ diff docs/basic-design/screens/SCR-001.md /tmp/scr-001-returned.md
 
 顧客Excelテンプレート（会社ロゴ・独自ヘッダー等）に完全一致が求められる場合、汎用スクリプトでは体裁が合わないことがある:
 
-1. 顧客テンプレートを `docs/customer-standard/templates/` に保存する
+1. 顧客テンプレートを `docs/10-management/customer-standard/templates/` に保存する
 2. `md_to_excel.py` をコピーして案件用に改造する（`build_cover` と体裁定数の差し替えが中心）
 3. 改造版は `.claude/skills/excel-deliverables/scripts/md_to_excel_<顧客名>.py` として保存し、テーラリング記録に残す
 4. セル単位の完全一致が必要な帳票的様式は、無理に自動化せず「表データ部分のみ自動・枠は手動」の分担を提案する
