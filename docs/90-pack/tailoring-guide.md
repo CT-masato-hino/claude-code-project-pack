@@ -88,6 +88,9 @@
 
 ## 5. 足すことが多いもの
 
+- 幅の広い機械的タスク（全件突合・逆生成・スイープ）が多い案件: グラフ実行標準（docs/90-pack/standards/graph-orchestration.md）
+  → 並列ワークフローの統制チェックリストと標準レシピ3本。小規模・逐次案件では「適用しない」判断をテーラリング記録に残す
+
 - 業種別のコンプライアンス観点（金融: FISC安全対策基準 / 医療: 3省2ガイドライン / 官公庁: 政府統一基準）
   → security-compliance の「法令・規程」節に追記する
 - 顧客固有の用語集（`docs/glossary.md` を作り、requirements-analyst と documentation-specialist に参照させる）

@@ -43,6 +43,7 @@ flowchart LR
         QCD["qcd-standards.md<br/>Q/C/D 21基準"]
         ASM["assumption-management.md<br/>仮定・Q-IDマーカー"]
         SECB["ai-security-baseline.md<br/>enterprise-controls.md"]
+        GRAPH["graph-orchestration.md<br/>グラフ実行標準（並列ワークフロー）"]
     end
 
     subgraph WORK["docs/（案件の正本・工程順ナンバリング）"]
