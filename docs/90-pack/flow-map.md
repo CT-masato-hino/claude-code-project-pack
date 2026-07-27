@@ -43,7 +43,7 @@ flowchart LR
         QCD["qcd-standards.md<br/>Q/C/D 21基準"]
         ASM["assumption-management.md<br/>仮定・Q-IDマーカー"]
         SECB["ai-security-baseline.md<br/>enterprise-controls.md"]
-        GRAPH["graph-orchestration.md<br/>グラフ実行標準（並列ワークフロー）"]
+        GRAPH["graph-orchestration.md<br/>ワークフロー実行標準（並列オーケストレーション）"]
     end
 
     subgraph WORK["docs/（案件の正本・工程順ナンバリング）"]
@@ -110,7 +110,7 @@ flowchart TD
     A["曖昧さ検出<br/>（全エージェント・全工程）"] --> B["起票: Q-ID＋影響範囲（機能ID）<br/>docs/open-questions.md"]
     B --> C{"進行可否<br/>leader判断"}
     C -->|待てる| D["顧客確認へ<br/>期限管理 D-05"]
-    C -->|待てない| E["仮定設定<br/>仮決め内容＋爆風半径<br/>（大きければ人間承認）"]
+    C -->|待てない| E["仮定設定<br/>仮決め内容＋外れた場合の影響<br/>（大きければ人間承認）"]
     E --> F["伝播: 作業時に依存箇所へ<br/>【仮定: Q-xxx】マーカー<br/>coder・設計・テストは着手前に<br/>担当機能IDでフィルタ"]
     F --> G["顧客回答（解決）"]
     D --> G

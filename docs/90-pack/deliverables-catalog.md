@@ -171,7 +171,7 @@ Mermaidは万能ではない。**構造が線形・表形式に近い図は自�
 | 受入テスト支援資料 | ○ | docs/03-test/uat-support/ | シナリオ・データ準備済み |
 | 移行計画書・手順書 | △ | docs/09-migration/ | 切り戻し手順あり・リハーサル記録 |
 | 納品物一覧 | ◎ | deliverables/<納品日>/ | 全◎成果物の突合OK |
-| コンテキストヒストリー（引き継ぎ） | ◎ | docs/06-context-history/LATEST.md | 保守フェーズが読んで再開できる |
+| 引き継ぎコンテキスト | ◎ | docs/06-context-history/LATEST.md | 保守フェーズが読んで再開できる |
 
 ## 工程横断（常設の成果物）
 
