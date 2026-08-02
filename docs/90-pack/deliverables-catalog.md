@@ -13,7 +13,7 @@
 docs/
 ├── 01-requirements/     要件定義（機能一覧・AC・非機能・業務フロー。現行調査は legacy/）
 ├── 02-design/           設計（basic/=基本設計・detail/=詳細設計・erd/・security-architecture.md）
-├── 03-test/             テスト（計画・仕様書兼成績書・エビデンス・pre-uat/・ui-check/）
+├── 03-test/             テスト（計画・仕様書兼成績書・エビデンス・pre-uat/・ui-check/・regression/）
 ├── 04-reports/          階層レポート（overall/・phase/・agent/）とQCD週次（qcd/）・週次診断（llm-friendly/）
 ├── 05-decisions/        ADR
 ├── 06-context-history/  引き継ぎ（LATEST.md・archive/・health-YYYYMMDD.md）
@@ -185,6 +185,7 @@ Mermaidは正本（git差分・機械可読）としては優秀だが、**人�
 | エージェント報告書 | ○ | docs/04-reports/agent/YYYYMMDD-<agent>.md | サブエージェント完了時にチャットへの要約と同内容を追記（監査可能性の確保） |
 | 全体報告書 | ○（節目・納品時は◎） | docs/04-reports/overall/YYYYMMDD-overall.md | 数値サマリ＋下層（フェーズ/エージェント報告書）へのリンク集。単層の長文にしない |
 | AI駆動開発セキュリティ説明資料 | ○（顧客説明・稟議・監査対応時は◎） | docs/10-management/ai-dev-security.md | AIのアクセス範囲・権限3層・遮断されているもの（deny実態と一致）・残リスクと受容判断の記録（テンプレ: project-init templates/ai-dev-security.md） |
+| 回帰テスト選択記録 | ◎（改修・不具合修正時） | docs/03-test/regression/ | 変更→影響機能→再実行テストIDの導出根拠（3層スコープ）・フル回帰格上げ条件の○×判定・実行結果の数値サマリーと実行時間あり（/test-planning「回帰テスト選択」。**範囲根拠なしの再テスト宣言は無効**） |
 
 ## 品質基準（納品前ゲート・全案件共通の最低ライン）
 
