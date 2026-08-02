@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>マスタスケジュール（ゴールデンサンプル）</title>
+<style>
+  /* 図のHTMLビュー ゴールデンサンプル — deliverables-catalog「図の正本/ビュー基準」の正解例。
+     図は装飾ではなく判断材料: ①どこまで終わったか ②どこが難所/ボトルネックか ③依存とマイルストーン。
+     正本（project-phase.md / WBS）からの一方向生成ビュー。直接編集禁止。値はすべてサンプル。 */
+  :root {
+    --ink: #1f2733;      /* 文字・現在日ライン */
+    --sub: #5a6675;
+    --muted: #7a8794;
+    --line: #dfe4ea;
+    --grid: #e8ecf1;
+    --paper: #ffffff;
+    --bg: #f4f6f8;
+    --done: #3d6fa5;     /* 実績（完了分の塗り） */
+    --remain: #dbe4ee;   /* 残り */
+    --bar-edge: #9fb2c6;
+    --critical: #d64545; /* クリティカルパス・ボトルネック */
+    --dep: #8a97a6;      /* 通常の依存矢印 */
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+    background: var(--bg); color: var(--ink); padding: 24px; font-size: 14px;
+  }
+  .sheet { max-width: 1360px; margin: 0 auto; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 24px 28px; }
+  header.doc { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 14px; }
+  header.doc h1 { font-size: 20px; letter-spacing: .02em; }
+  header.doc h1 small { font-size: 13px; font-weight: normal; color: var(--sub); margin-left: 10px; }
+  .docmeta { font-size: 11.5px; color: var(--sub); text-align: right; line-height: 1.6; }
+  .questions { font-size: 12.5px; color: var(--sub); margin-bottom: 14px; }
+  .questions b { color: var(--ink); }
+  .stats { display: flex; gap: 12px; margin-bottom: 16px; }
+  .stat { flex: 1; border: 1px solid var(--line); border-left: 4px solid var(--done); border-radius: 6px; padding: 10px 14px; }
+  .stat.risk { border-left-color: var(--critical); }
+  .stat .k { font-size: 11px; color: var(--muted); letter-spacing: .04em; }
+  .stat .v { font-size: 15px; font-weight: 600; margin-top: 2px; }
+  .stat .n { font-size: 11.5px; color: var(--sub); margin-top: 2px; }
+  .chart-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+  .chart-wrap svg { display: block; min-width: 1304px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 18px; font-size: 11.5px; color: var(--sub); margin-top: 12px; align-items: center; }
+  .legend .item { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { display: inline-block; width: 22px; height: 12px; border-radius: 3px; }
+  .foot { margin-top: 14px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; line-height: 1.7; }
+  @media print {
+    @page { size: A4 landscape; margin: 10mm; }
+    body { background: #fff; padding: 0; }
+    .sheet { border: none; padding: 0; }
+    .chart-wrap { border: none; overflow: visible; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="doc">
+    <h1>マスタスケジュール<small>（案件名）システム導入 Phase1 — W1〜W14</small></h1>
+    <div class="docmeta">
+      版数: 0.3 ／ 生成日: 2026-08-02 ／ 正本: docs/project-phase.md・WBS（本図は一方向生成ビュー・直接編集禁止）
+    </div>
+  </header>
+
+  <p class="questions">
+    この図が答える3問 —
+    <b>① どこまで終わったか</b>（バーの濃い塗り＝実績、墨色破線＝現在日）
+    <b>② どこが難所か</b>（赤＝クリティカルパス、赤点線囲み＝ボトルネック）
+    <b>③ 依存とマイルストーン</b>（矢印・&#9660;）
+  </p>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="k">出来高（D-01 成果物完了基準）</div>
+      <div class="v">48%</div>
+      <div class="n">完了 2 ／ 進行中 5 ／ 未着手 2（全9作業）</div>
+    </div>
+    <div class="stat">
+      <div class="k">クリティカルパス上の現在地</div>
+      <div class="v">製造（アプリ） 35%</div>
+      <div class="n">W8 ／ 開発完了マイルストーンまで残り 2.5週</div>
+    </div>
+    <div class="stat risk">
+      <div class="k">最大リスク（ボトルネック）</div>
+      <div class="v">外部IF仕様の回答待ち 2件</div>
+      <div class="n">Q-041 / Q-042 — 回答がW9を越えると結合テスト開始に直撃</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+  <svg viewBox="0 0 1304 520" xmlns="http://www.w3.org/2000/svg" font-family="Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, sans-serif">
+    <defs>
+      <marker id="mR" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#d64545"/>
+      </marker>
+      <marker id="mG" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#8a97a6"/>
+      </marker>
+    </defs>
+
+    <!-- 背景・ゼブラ行 -->
+    <rect x="0" y="0" width="1304" height="54" fill="#eef2f6"/>
+    <rect x="0" y="134" width="1304" height="46" fill="#f7f9fb"/>
+    <rect x="0" y="226" width="1304" height="46" fill="#f7f9fb"/>
+    <rect x="0" y="318" width="1304" height="46" fill="#f7f9fb"/>
+    <rect x="0" y="410" width="1304" height="46" fill="#f7f9fb"/>
+
+    <!-- 週グリッド縦線 -->
+    <g stroke="#e8ecf1" stroke-width="1">
+      <line x1="316" y1="54" x2="316" y2="502"/><line x1="392" y1="54" x2="392" y2="502"/>
+      <line x1="468" y1="54" x2="468" y2="502"/><line x1="544" y1="54" x2="544" y2="502"/>
+      <line x1="620" y1="54" x2="620" y2="502"/><line x1="696" y1="54" x2="696" y2="502"/>
+      <line x1="772" y1="54" x2="772" y2="502"/><line x1="848" y1="54" x2="848" y2="502"/>
+      <line x1="924" y1="54" x2="924" y2="502"/><line x1="1000" y1="54" x2="1000" y2="502"/>
+      <line x1="1076" y1="54" x2="1076" y2="502"/><line x1="1152" y1="54" x2="1152" y2="502"/>
+      <line x1="1228" y1="54" x2="1228" y2="502"/>
+    </g>
+    <line x1="240" y1="0" x2="240" y2="502" stroke="#dfe4ea" stroke-width="1"/>
+    <!-- 行区切り横線 -->
+    <g stroke="#eef1f5" stroke-width="1">
+      <line x1="0" y1="134" x2="1304" y2="134"/><line x1="0" y1="180" x2="1304" y2="180"/>
+      <line x1="0" y1="226" x2="1304" y2="226"/><line x1="0" y1="272" x2="1304" y2="272"/>
+      <line x1="0" y1="318" x2="1304" y2="318"/><line x1="0" y1="364" x2="1304" y2="364"/>
+      <line x1="0" y1="410" x2="1304" y2="410"/><line x1="0" y1="456" x2="1304" y2="456"/>
+    </g>
+    <line x1="0" y1="54" x2="1304" y2="54" stroke="#c9d1da" stroke-width="1"/>
+    <line x1="0" y1="88" x2="1304" y2="88" stroke="#dfe4ea" stroke-width="1"/>
+    <line x1="0" y1="502" x2="1304" y2="502" stroke="#c9d1da" stroke-width="1"/>
+
+    <!-- 週ヘッダ -->
+    <text x="14" y="34" font-size="12" fill="#5a6675">作業（担当ロールID）</text>
+    <g text-anchor="middle">
+      <g font-size="12" fill="#1f2733" font-weight="600">
+        <text x="278" y="24">W1</text><text x="354" y="24">W2</text><text x="430" y="24">W3</text>
+        <text x="506" y="24">W4</text><text x="582" y="24">W5</text><text x="658" y="24">W6</text>
+        <text x="734" y="24">W7</text><text x="810" y="24">W8</text><text x="886" y="24">W9</text>
+        <text x="962" y="24">W10</text><text x="1038" y="24">W11</text><text x="1114" y="24">W12</text>
+        <text x="1190" y="24">W13</text><text x="1266" y="24">W14</text>
+      </g>
+      <g font-size="10.5" fill="#7a8794">
+        <text x="278" y="42">12/01</text><text x="354" y="42">12/08</text><text x="430" y="42">12/15</text>
+        <text x="506" y="42">12/22</text><text x="582" y="42">12/29</text><text x="658" y="42">01/05</text>
+        <text x="734" y="42">01/12</text><text x="810" y="42">01/19</text><text x="886" y="42">01/26</text>
+        <text x="962" y="42">02/02</text><text x="1038" y="42">02/09</text><text x="1114" y="42">02/16</text>
+        <text x="1190" y="42">02/23</text><text x="1266" y="42">03/02</text>
+      </g>
+    </g>
+
+    <!-- マイルストーン（▼）バンド -->
+    <g font-size="11" fill="#1f2733">
+      <text x="246" y="68">キックオフ</text>
+      <text x="468" y="68" text-anchor="middle">要件定義完了</text>
+      <text x="620" y="68" text-anchor="middle">仕様凍結</text>
+      <text x="1000" y="68" text-anchor="middle">開発完了</text>
+      <text x="1152" y="68" text-anchor="middle">総合テスト完了</text>
+      <text x="1300" y="68" text-anchor="end">納品・検収</text>
+    </g>
+    <g fill="#d64545">
+      <path d="M234,74 L246,74 L240,86 z"/>
+      <path d="M462,74 L474,74 L468,86 z"/>
+      <path d="M614,74 L626,74 L620,86 z"/>
+      <path d="M994,74 L1006,74 L1000,86 z"/>
+      <path d="M1146,74 L1158,74 L1152,86 z"/>
+      <path d="M1290,74 L1302,74 L1296,86 z"/>
+    </g>
+
+    <!-- クリティカルパス行の左タブ -->
+    <g fill="#d64545">
+      <rect x="0" y="88" width="4" height="46"/><rect x="0" y="134" width="4" height="46"/>
+      <rect x="0" y="226" width="4" height="46"/><rect x="0" y="318" width="4" height="46"/>
+      <rect x="0" y="410" width="4" height="46"/><rect x="0" y="456" width="4" height="46"/>
+    </g>
+
+    <!-- 行ラベル -->
+    <g font-size="13" fill="#1f2733">
+      <text x="14" y="108">要件定義</text>
+      <text x="14" y="154">基本設計</text>
+      <text x="14" y="200">ERD・移行方針</text>
+      <text x="14" y="246">詳細設計</text>
+      <text x="14" y="292">外部IF仕様調整</text>
+      <text x="14" y="338">製造（アプリ）</text>
+      <text x="14" y="384">製造（バッチ・帳票）</text>
+      <text x="14" y="430">結合テスト</text>
+      <text x="14" y="476">総合・受入テスト</text>
+    </g>
+    <g font-size="10.5" fill="#7a8794">
+      <text x="14" y="124">RA1・PL</text>
+      <text x="14" y="170">BD1</text>
+      <text x="14" y="216">DM1</text>
+      <text x="14" y="262">DD1</text>
+      <text x="14" y="308">PL・先方担当</text>
+      <text x="14" y="354">BE1・FE1</text>
+      <text x="14" y="400">BE2</text>
+      <text x="14" y="446">TE1</text>
+      <text x="14" y="492">TE1・顧客</text>
+    </g>
+
+    <!-- バー（薄色=計画全体、濃色=実績。赤枠=クリティカルパス、赤点線枠=ボトルネック） -->
+    <!-- T1 要件定義 W1-3 100% -->
+    <rect x="244" y="98" width="220" height="26" rx="4" fill="#dbe4ee" stroke="#d64545" stroke-width="2"/>
+    <rect x="244" y="98" width="220" height="26" rx="4" fill="#3d6fa5"/>
+    <rect x="244" y="98" width="220" height="26" rx="4" fill="none" stroke="#d64545" stroke-width="2"/>
+    <!-- T2 基本設計 W3-5 100% -->
+    <rect x="396" y="144" width="220" height="26" rx="4" fill="#3d6fa5"/>
+    <rect x="396" y="144" width="220" height="26" rx="4" fill="none" stroke="#d64545" stroke-width="2"/>
+    <!-- T3 ERD・移行方針 W4-6 80% -->
+    <rect x="472" y="190" width="220" height="26" rx="4" fill="#dbe4ee" stroke="#9fb2c6" stroke-width="1"/>
+    <rect x="472" y="190" width="176" height="26" rx="3" fill="#3d6fa5"/>
+    <!-- T4 詳細設計 W5-7 70% -->
+    <rect x="548" y="236" width="220" height="26" rx="4" fill="#dbe4ee"/>
+    <rect x="548" y="236" width="154" height="26" rx="3" fill="#3d6fa5"/>
+    <rect x="548" y="236" width="220" height="26" rx="4" fill="none" stroke="#d64545" stroke-width="2"/>
+    <!-- T5 外部IF仕様調整 W4-9 40%（ボトルネック） -->
+    <rect x="472" y="282" width="448" height="26" rx="4" fill="#dbe4ee"/>
+    <rect x="472" y="282" width="179" height="26" rx="3" fill="#3d6fa5"/>
+    <rect x="472" y="282" width="448" height="26" rx="4" fill="none" stroke="#d64545" stroke-width="2" stroke-dasharray="5 3"/>
+    <!-- T6 製造（アプリ） W6-10 35% -->
+    <rect x="624" y="328" width="372" height="26" rx="4" fill="#dbe4ee"/>
+    <rect x="624" y="328" width="130" height="26" rx="3" fill="#3d6fa5"/>
+    <rect x="624" y="328" width="372" height="26" rx="4" fill="none" stroke="#d64545" stroke-width="2"/>
+    <!-- T7 製造（バッチ・帳票） W7-10 10% -->
+    <rect x="700" y="374" width="296" height="26" rx="4" fill="#dbe4ee" stroke="#9fb2c6" stroke-width="1"/>
+    <rect x="700" y="374" width="30" height="26" rx="3" fill="#3d6fa5"/>
+    <!-- T8 結合テスト W10-12 0% -->
+    <rect x="928" y="420" width="220" height="26" rx="4" fill="#dbe4ee"/>
+    <rect x="928" y="420" width="220" height="26" rx="4" fill="none" stroke="#d64545" stroke-width="2"/>
+    <!-- T9 総合・受入テスト W12-14 0% -->
+    <rect x="1080" y="466" width="220" height="26" rx="4" fill="#dbe4ee"/>
+    <rect x="1080" y="466" width="220" height="26" rx="4" fill="none" stroke="#d64545" stroke-width="2"/>
+
+    <!-- 進捗ラベル -->
+    <g font-size="11.5">
+      <text x="456" y="115" text-anchor="end" fill="#ffffff">完了</text>
+      <text x="608" y="161" text-anchor="end" fill="#ffffff">完了</text>
+      <text x="684" y="207" text-anchor="end" fill="#33404e">80%</text>
+      <text x="760" y="253" text-anchor="end" fill="#33404e">70%</text>
+      <text x="912" y="299" text-anchor="end" fill="#33404e">40%</text>
+      <text x="988" y="345" text-anchor="end" fill="#33404e">35%</text>
+      <text x="988" y="391" text-anchor="end" fill="#33404e">10%</text>
+      <text x="1140" y="437" text-anchor="end" fill="#33404e">未着手</text>
+      <text x="1292" y="483" text-anchor="end" fill="#33404e">未着手</text>
+    </g>
+
+    <!-- 依存矢印（赤実線=クリティカルパス、赤点線=ボトルネック合流、灰=通常） -->
+    <g fill="none" stroke="#d64545" stroke-width="2" marker-end="url(#mR)">
+      <path d="M450,124 V140"/>
+      <path d="M616,157 H700 V232"/>
+      <path d="M768,249 H782 V324"/>
+      <path d="M985,354 V416"/>
+      <path d="M1110,446 V462"/>
+    </g>
+    <path d="M920,295 H930 V416" fill="none" stroke="#d64545" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#mR)"/>
+    <path d="M970,400 V416" fill="none" stroke="#8a97a6" stroke-width="1.5" marker-end="url(#mG)"/>
+
+    <!-- ボトルネック注記（判断材料。装飾ではない） -->
+    <rect x="950" y="176" width="344" height="78" rx="6" fill="#ffffff" stroke="#d64545" stroke-dasharray="4 3"/>
+    <text x="962" y="198" font-size="12" font-weight="600" fill="#d64545">ボトルネック: 外部IF仕様の回答待ち（Q-041/042）</text>
+    <text x="962" y="218" font-size="11" fill="#33404e">先方回答がW9を越えると結合テスト開始（W10）に直撃。</text>
+    <text x="962" y="236" font-size="11" fill="#33404e">対応: D-05により翌営業日催促を起票済み・週次でPLへ報告。</text>
+    <path d="M990,254 L935,280" stroke="#d64545" stroke-width="1" stroke-dasharray="3 3"/>
+
+    <!-- 現在日ライン -->
+    <line x1="772" y1="54" x2="772" y2="502" stroke="#1f2733" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="778" y="68" font-size="11" font-weight="600" fill="#1f2733">現在日（W8）</text>
+  </svg>
+  </div>
+
+  <div class="legend">
+    <span class="item"><span class="sw" style="background:#3d6fa5"></span>実績（完了分）</span>
+    <span class="item"><span class="sw" style="background:#dbe4ee; border:1px solid #9fb2c6"></span>計画（残り）</span>
+    <span class="item"><span class="sw" style="background:#fff; border:2px solid #d64545"></span>クリティカルパス（赤矢印＝依存）</span>
+    <span class="item"><span class="sw" style="background:#fff; border:2px dashed #d64545"></span>ボトルネック</span>
+    <span class="item"><svg width="14" height="12"><path d="M1,1 L13,1 L7,11 z" fill="#d64545"/></svg>マイルストーン</span>
+    <span class="item"><svg width="22" height="12"><line x1="11" y1="0" x2="11" y2="12" stroke="#1f2733" stroke-width="1.5" stroke-dasharray="4 3"/></svg>現在日</span>
+    <span class="item"><svg width="22" height="12"><line x1="0" y1="6" x2="16" y2="6" stroke="#8a97a6" stroke-width="1.5"/><path d="M16,2 L22,6 L16,10 z" fill="#8a97a6"/></svg>通常の依存</span>
+  </div>
+
+  <div class="foot">
+    本図はゴールデンサンプル（deliverables-catalog「図の正本/ビュー基準」の正解例）。値・作業名・日付はすべてサンプル。
+    実案件では正本（project-phase.md・WBS・成果物台帳）から一方向生成し、直接編集しない。生成・大幅改稿はOpus 5以上のモデルで行う。
+    品質の判定基準: ①どこまで終わったか ②どこが難所/ボトルネックか ③依存とマイルストーン — の3問に図だけで答えられること。
+    アバター・炎アイコン・過剰な色数・意味のないカードの羅列は不合格。印刷はブラウザからA4横で。
+  </div>
+
+</div>
+</body>
+</html>
