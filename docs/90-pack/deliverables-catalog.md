@@ -58,6 +58,7 @@ docs/
 | テスト計画（W字の各ドラフト） | テスト構成図（テストレベル×環境×データの対応図） | docs/03-test/test-plan.md | test-planning / test-engineer |
 | 各テスト完了 | テスト報告サマリ（数値サマリー表: 計画/実施/合否件数・消化率・不具合密度） | docs/03-test/<レベル>/ | test-engineer |
 | 各工程完了 | フェーズ報告書（docs/04-reports/phase/） | ゲート判定記録・成績書・台帳 | documentation-specialist / leader |
+| 工程共通（週次） | EVM S曲線（PV/EV/AC・SPI/CPI。**顧客提出時はPV/EVのみ** — qcd-standards「EVM」節） | C-01実績記録・WBS・成果物台帳 | estimation-specialist / leader |
 | 工程共通（随時） | 課題トレンド（起票数vs解決数の推移） | docs/issues.md | leader（「品質ループの停止判断」の入力） |
 
 ビジュアル自体の必須度は◎ではなく**ゲート運用の標準**（納品物になるのは正本文書。必須度は下の各工程の表に従う）。例外はUIあり案件のHTMLモック（基本設計の◎）とローカルUI目視チェック（UIあり案件の製造・単体完了ゲート条件）。

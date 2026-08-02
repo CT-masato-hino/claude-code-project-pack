@@ -40,6 +40,7 @@
   .stat .k { font-size: 11px; color: var(--muted); letter-spacing: .04em; }
   .stat .v { font-size: 15px; font-weight: 600; margin-top: 2px; }
   .stat .n { font-size: 11.5px; color: var(--sub); margin-top: 2px; }
+  h2.sec { font-size: 15px; border-left: 4px solid var(--ink); padding-left: 10px; margin: 22px 0 12px; }
   .chart-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
   .chart-wrap svg { display: block; min-width: 1304px; }
   .legend { display: flex; flex-wrap: wrap; gap: 18px; font-size: 11.5px; color: var(--sub); margin-top: 12px; align-items: center; }
@@ -88,6 +89,8 @@
       <div class="n">Q-041 / Q-042 — 回答がW9を越えると結合テスト開始に直撃</div>
     </div>
   </div>
+
+  <h2 class="sec">スケジュール（クリティカルパス・ボトルネック）</h2>
 
   <div class="chart-wrap">
   <svg viewBox="0 0 1304 520" xmlns="http://www.w3.org/2000/svg" font-family="Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, sans-serif">
@@ -277,8 +280,95 @@
     <span class="item"><svg width="22" height="12"><line x1="0" y1="6" x2="16" y2="6" stroke="#8a97a6" stroke-width="1.5"/><path d="M16,2 L22,6 L16,10 z" fill="#8a97a6"/></svg>通常の依存</span>
   </div>
 
+  <h2 class="sec">EVM（出来高管理）— W8時点</h2>
+
+  <div class="stats">
+    <div class="stat risk">
+      <div class="k">SPI（スケジュール効率 = EV/PV）</div>
+      <div class="v">0.83</div>
+      <div class="n">0.9未満 → C-02警告。要因は外部IF回答待ち（上図ボトルネックと同根）</div>
+    </div>
+    <div class="stat">
+      <div class="k">CPI（コスト効率 = EV/AC）</div>
+      <div class="v">0.92</div>
+      <div class="n">警告線（0.9）の内側。実績工数はC-01週次記録から機械算出</div>
+    </div>
+    <div class="stat">
+      <div class="k">EAC（完成時予測 = BAC ÷ CPI）</div>
+      <div class="v">108人日</div>
+      <div class="n">BAC 100人日 → +8人日 ／ 完了再予測 W15（+1週）→ D-03へ入力</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+  <svg viewBox="0 0 1304 280" xmlns="http://www.w3.org/2000/svg" font-family="Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, sans-serif">
+    <!-- 週グリッド縦線・軸 -->
+    <g stroke="#eef1f5" stroke-width="1">
+      <line x1="316" y1="40" x2="316" y2="236"/><line x1="392" y1="40" x2="392" y2="236"/>
+      <line x1="468" y1="40" x2="468" y2="236"/><line x1="544" y1="40" x2="544" y2="236"/>
+      <line x1="620" y1="40" x2="620" y2="236"/><line x1="696" y1="40" x2="696" y2="236"/>
+      <line x1="772" y1="40" x2="772" y2="236"/><line x1="848" y1="40" x2="848" y2="236"/>
+      <line x1="924" y1="40" x2="924" y2="236"/><line x1="1000" y1="40" x2="1000" y2="236"/>
+      <line x1="1076" y1="40" x2="1076" y2="236"/><line x1="1152" y1="40" x2="1152" y2="236"/>
+      <line x1="1228" y1="40" x2="1228" y2="236"/>
+    </g>
+    <g stroke="#eef1f5" stroke-width="1">
+      <line x1="240" y1="191" x2="1304" y2="191"/>
+      <line x1="240" y1="146" x2="1304" y2="146"/>
+      <line x1="240" y1="101" x2="1304" y2="101"/>
+    </g>
+    <line x1="240" y1="56" x2="1304" y2="56" stroke="#c9d1da" stroke-width="1" stroke-dasharray="4 3"/>
+    <line x1="240" y1="236" x2="1304" y2="236" stroke="#c9d1da" stroke-width="1"/>
+    <line x1="240" y1="40" x2="240" y2="236" stroke="#dfe4ea" stroke-width="1"/>
+    <!-- Y軸ラベル -->
+    <g font-size="10.5" fill="#7a8794" text-anchor="end">
+      <text x="232" y="44">人日</text>
+      <text x="232" y="240">0</text>
+      <text x="232" y="195">25</text>
+      <text x="232" y="150">50</text>
+      <text x="232" y="105">75</text>
+      <text x="232" y="60">100</text>
+    </g>
+    <text x="1296" y="50" font-size="10.5" fill="#5a6675" text-anchor="end">BAC 100人日</text>
+    <!-- X軸ラベル -->
+    <g font-size="10.5" fill="#7a8794" text-anchor="middle">
+      <text x="278" y="256">W1</text><text x="354" y="256">W2</text><text x="430" y="256">W3</text>
+      <text x="506" y="256">W4</text><text x="582" y="256">W5</text><text x="658" y="256">W6</text>
+      <text x="734" y="256">W7</text><text x="810" y="256">W8</text><text x="886" y="256">W9</text>
+      <text x="962" y="256">W10</text><text x="1038" y="256">W11</text><text x="1114" y="256">W12</text>
+      <text x="1190" y="256">W13</text><text x="1266" y="256">W14</text>
+    </g>
+    <!-- 現在（W8）の目印 -->
+    <line x1="810" y1="44" x2="810" y2="236" stroke="#e3e7ec" stroke-width="1.5"/>
+    <!-- PV（計画・破線） -->
+    <polyline points="278,231 354,222 430,209 506,195 582,178 658,162 734,146 810,132 886,115 962,99 1038,83 1114,70 1190,61 1266,56"
+      fill="none" stroke="#8a97a6" stroke-width="1.5" stroke-dasharray="6 4"/>
+    <!-- AC（実績工数） -->
+    <polyline points="278,231 354,222 430,209 506,196 582,182 658,168 734,155 810,142"
+      fill="none" stroke="#a8642a" stroke-width="2"/>
+    <!-- EV（出来高） -->
+    <polyline points="278,231 354,223 430,213 506,200 582,187 658,175 734,162 810,150"
+      fill="none" stroke="#3d6fa5" stroke-width="2"/>
+    <circle cx="810" cy="142" r="4" fill="#a8642a" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="810" cy="150" r="4" fill="#3d6fa5" stroke="#ffffff" stroke-width="1.5"/>
+    <!-- 直接ラベル（文字は墨色 — 色はマークが運ぶ） -->
+    <g font-size="11" fill="#33404e">
+      <text x="822" y="124">PV 58</text>
+      <text x="822" y="140">AC 52</text>
+      <text x="822" y="162">EV 48</text>
+    </g>
+  </svg>
+  </div>
+
+  <div class="legend">
+    <span class="item"><svg width="24" height="12"><line x1="0" y1="6" x2="24" y2="6" stroke="#8a97a6" stroke-width="1.5" stroke-dasharray="6 4"/></svg>PV（計画価値 = 完了予定成果物の計画工数累計）</span>
+    <span class="item"><svg width="24" height="12"><line x1="0" y1="6" x2="24" y2="6" stroke="#3d6fa5" stroke-width="2"/></svg>EV（出来高 = 完了成果物の計画工数累計・D-01の0/100基準）</span>
+    <span class="item"><svg width="24" height="12"><line x1="0" y1="6" x2="24" y2="6" stroke="#a8642a" stroke-width="2"/></svg>AC（実績工数累計・C-01週次記録）</span>
+    <span class="item" style="color:#d64545">顧客提出時はPV・EVのみ（AC・CPI・EACは社内原価情報 — qcd-standards「EVM」節）</span>
+  </div>
+
   <div class="foot">
-    本図はゴールデンサンプル（deliverables-catalog「図の正本/ビュー基準」の正解例）。値・作業名・日付はすべてサンプル。
+    本図はゴールデンサンプル（deliverables-catalog「図の正本/ビュー基準」の正解例）。値・作業名・日付・EVM値はすべてサンプル。
     実案件では正本（project-phase.md・WBS・成果物台帳）から一方向生成し、直接編集しない。生成・大幅改稿はOpus 5以上のモデルで行う。
     品質の判定基準: ①どこまで終わったか ②どこが難所/ボトルネックか ③依存とマイルストーン — の3問に図だけで答えられること。
     アバター・炎アイコン・過剰な色数・意味のないカードの羅列は不合格。印刷はブラウザからA4横で。
