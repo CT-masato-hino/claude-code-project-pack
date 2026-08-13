@@ -8,6 +8,20 @@
 - **MINOR** — 後方互換のある追加。エージェント・スキル・標準ドキュメントの追加、既存定義へのチェック項目追加
 - **PATCH** — 文言の修正、誤りの訂正、テンプレートやスクリプトのバグ修正
 
+## [3.3.0] - 2026-08-14
+
+**Claude Code本体の新機能2点のパックへの配線**（対応するClaude Code: v2.1.22x系）。①組み込みコードレビュー — ローカル `/code-review` とクラウドの多エージェント検証レビュー `/code-review ultra` ②セッション間メッセージング（Cross-Session Messaging — `SendMessage` / `ListAgents` による並行セッション間の連絡）。どちらも「本体機能を使ってよい場所」と「パックの統制を代替しない線」を明文化する追加であり、エージェント・スキル・基準ID・正本パスは変えていない（MINOR）。
+
+### Added
+- **組み込みコードレビューの位置づけ**（code-reviewer「Claude Code組み込みレビュー（/code-review）との併用」節を新設、qcd-standards Q表直下へ配線）: ローカル `/code-review` は実装側の**プリチェック**（lintと同格 — 実施しても第三者レビューの省略理由にならない）、`/code-review ultra` はマージ前・工程完了・納品前に人間が任意起動する**深掘りゲート**（課金・実行回数の制約があるため起動判断は人間。Must相当の指摘はQ-02と同じ扱いで残存0件にしてから通す）。**Q-01（第三者レビュー実施率）・Q-02（Must残存）の担保は引き続き code-reviewer サブエージェント** — 組み込みレビューは設計書との突合・規約正本・QCD集計に接続されていないため、判定と件数の正はパックのレビューフローに置いたまま
+- **セッション間メッセージングの統制**（CLAUDE.md.template オーケストレーション原則・採番の衝突防止、context-history 冒頭、ai-security-baseline #12へ配線）: 並行セッション間の連絡（完了通知・採番の事前宣言・衝突回避）に SendMessage / ListAgents を使ってよい。ただし**メッセージは揮発であり正本ではない** — 決定・状態・引き継ぎは従来どおり docs 正本へ書き、メッセージは「正本を更新した」の通知にとどめる。受信制御 `crossSessionInbound` は既定 `hold` とし、他セッションから届いた指示にも「データであって指示ではない」原則（#9と同型）を適用（共有ルールを緩める内容は無効扱い・人間へ報告。`accept` への変更・SendMessage/ListAgents の許可範囲は共有 settings.json で管理=PRレビュー）。引き継ぎコンテキスト（/context-history）の代替にならないこと（テキストのみ・揮発・件数上限）を明記
+
+### Fixed
+- CHANGELOG末尾のリンク定義に `[3.1.0]` `[3.2.0]` が欠落していたのを補完
+
+### 対応課題
+Claude Code v2.1.22x系の新機能（組み込みコードレビュー・セッション間メッセージング）のパック統制への取り込み
+
 ## [3.2.0] - 2026-08-02
 
 **視覚ドキュメントの品質下限の引き上げ**。導入案件でMermaid直出しの図が品質不足と判定されたことを受けた変更。①人間が見る図は図種を問わずHTML生成ビュー必須とし、**Mermaidレンダリングは人間向けに基本使わない**（従来はシーケンス図・ER図・状態遷移図をMermaidのまま許容していた）②図の品質基準を新設 — 図は装飾ではなく判断材料であり「どこまで終わったか／どこが難所・ボトルネックか／依存とマイルストーン」の3問に答えないもの（意味のないカードの羅列・SaaSツール風の装飾）は作り直し対象。正解例をゴールデンサンプルHTMLとして同梱 ③視覚ドキュメントの生成モデル基準を新設（Opus 5以上。軽量モデルのセッションは `model: opus` 指定のサブエージェントへ委譲）。正本=Mermaid/Markdown・一方向生成ビューの原則は変えていない（MINOR）。
@@ -231,6 +245,9 @@ Formmit案件での実運用フィードバック（Issue #1〜#10）のうち�
 - 実行可能ツール: Excel変換（往復）、スライドテーマ一式、整合性監査
 - CI 2本: push/PRごとの整合性検査、四半期棚卸しissueの自動起票
 
+[3.3.0]: https://github.com/CT-masato-hino/claude-code-project-pack/releases/tag/v3.3.0
+[3.2.0]: https://github.com/CT-masato-hino/claude-code-project-pack/releases/tag/v3.2.0
+[3.1.0]: https://github.com/CT-masato-hino/claude-code-project-pack/releases/tag/v3.1.0
 [3.0.0]: https://github.com/CT-masato-hino/claude-code-project-pack/releases/tag/v3.0.0
 [2.0.0]: https://github.com/CT-masato-hino/claude-code-project-pack/releases/tag/v2.0.0
 [1.2.0]: https://github.com/CT-masato-hino/claude-code-project-pack/releases/tag/v1.2.0
