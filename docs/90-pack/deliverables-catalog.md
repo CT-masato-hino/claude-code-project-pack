@@ -99,7 +99,7 @@ Mermaidは正本（git差分・機械可読）としては優秀だが、**人�
 | 成果物 | 必須度 | 正本の場所 | 完了条件 |
 |---|---|---|---|
 | 機能一覧 | ◎ | docs/01-requirements/functional-list.md | 全機能にID・優先度・状態 |
-| 受入基準（AC）一式 | ◎ | docs/01-requirements/acceptance-criteria/ | 全ThenがObservable、異常系1件以上 |
+| 受入基準（AC）一式 | ◎ | docs/01-requirements/acceptance-criteria/ | 全ThenがObservable、準正常系（エラー時挙動）1件以上 |
 | 非機能要件定義書 | ◎ | docs/01-requirements/non-functional.md | 6大項目に未記入なし（仮置き可） |
 | 業務フロー図 | ○ | docs/01-requirements/business-flow.md | As-Is/To-Beの別が明記 |
 | 用語集 | ○ | docs/glossary.md | — |
@@ -127,7 +127,7 @@ Mermaidは正本（git差分・機械可読）としては優秀だが、**人�
 
 | 成果物 | 必須度 | 正本の場所 | 完了条件 |
 |---|---|---|---|
-| 詳細設計書 | ◎ | docs/02-design/detail/<機能ID>/ | 異常系分岐・Tx境界・単体テスト観点あり |
+| 詳細設計書 | ◎ | docs/02-design/detail/<機能ID>/ | エラー分岐（準正常/受け皿）・Tx境界・単体テスト観点あり |
 | ADR（設計判断記録） | ○ | docs/05-decisions/ | 却下案と理由を含む |
 
 ## 製造・単体テスト
@@ -144,7 +144,8 @@ Mermaidは正本（git差分・機械可読）としては優秀だが、**人�
 
 | 成果物 | 必須度 | 正本の場所 | 完了条件 |
 |---|---|---|---|
-| 結合テスト仕様書兼成績書 | ◎ | docs/03-test/integration/ | 基本設計トレース・不合格は起票済み・数値サマリー表あり |
+| 結合テスト仕様書兼成績書 | ◎ | docs/03-test/integration/ | 基本設計トレース（エラーコード一覧の行を含む — 「テストなきエラーコード」ゼロ）・不合格は起票済み・数値サマリー表あり |
+| 境目E2E自動テスト一式 | ○（UIあり案件） | リポジトリ（テストコード。ケース対応は結合テスト仕様書側） | エラーコード1行につきUI代表1点・スモークセット自動化済み・フック/CIで実行可能（/test-planning「境目E2E」） |
 | 不具合管理表 | ◎ | docs/issues.md | Critical未解決ゼロ |
 
 ## 総合テスト
