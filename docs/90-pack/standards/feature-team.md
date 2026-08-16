@@ -46,7 +46,7 @@
 
 ## 並列実行の運用（Claude Code上）
 
-- スクワッドのFE/BEはAgentの並列呼び出し（またはworktree分離）で同時進行できる
+- スクワッドのFE/BEはAgentの並列呼び出し（またはworktree分離）で同時進行できる。worktreeを使う場合の実行単位・統合・終了は graph-orchestration.md §7 に従う
 - **直列必須の作業**: ERD/テーブル変更（data-model-specialist独占）・共通部品の変更・規約改訂。並列中にこれらが発生したら該当スクワッドは停止して報告
 - 統合の頻度: 最低でも機能ID完了ごと。長期並走での「ビッグバン統合」を禁止
 
