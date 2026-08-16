@@ -13,7 +13,7 @@ description: プロジェクト開始時のセットアップ（スターター�
 
 ## フェーズ0: 配置検査（ヒアリングの前に機械的に確認）
 
-- `docs/90-pack/standards/`（qcd-standards / assumption-management / ai-security-baseline / feature-team）と
+- `docs/90-pack/standards/`（qcd-standards / assumption-management / ai-security-baseline / feature-team / claude-md-constitution）と
   `docs/90-pack/deliverables-catalog.md` `docs/90-pack/tailoring-guide.md` `docs/90-pack/ipa-process-mapping.md` が案件リポジトリに存在するか確認する
 - **欠けていればパック原本からコピーしてから進む**（エージェントはこれらを照合先として参照するため、欠けたまま進むと全基準参照が切れる）。コピー元は、クローン導入ならパック原本リポジトリ、プラグイン導入ならプラグインのインストール先（本スキルのファイルパスから遡って特定できる。docs/90-pack/・CLAUDE.md.template・.mcp.json.template はプラグインルート直下にある）
 - `CLAUDE.md.template` / `.mcp.json.template` の有無も確認する
@@ -137,7 +137,7 @@ description: プロジェクト開始時のセットアップ（スターター�
 
 ## フェーズ4: 適用
 
-1. `CLAUDE.md.template` → `CLAUDE.md` 生成（出発資産と適用プレイブック名を明記。埋まらない項目は【要確認】起票）
+1. `CLAUDE.md.template` → `CLAUDE.md` 生成（出発資産と適用プレイブック名を明記。埋まらない項目は【要確認】起票）。**判断基準（憲法L2）の初期条文を数本起こす** — ヒアリング結果（業務影響度4-2・出発資産の罠・業種規制）から「衝突したときの優先順位と例外」の形で書く（例:「操作速度と誤操作防止が衝突したら速度優先。金銭操作と削除は例外」）。ゼロ本で運用を始めない（正本: docs/90-pack/standards/claude-md-constitution.md）
 2. 除外エージェントの移動・QCD基準の全IDテーラリング確定（ai-dev-standardizer主導）・確定値のCLAUDE.md転記
 3. docs骨組み生成（工程順ナンバリング標準 — deliverables-catalog「docs/ ディレクトリ標準」に従う）: `docs/open-questions.md` / `docs/issues.md` / `docs/05-decisions/` / `docs/06-context-history/`（初期LATEST.mdに本セットアップを記録）/ `docs/project-phase.md`（工程状態の正本。`templates/project-phase.md` から生成し、初期工程・開始日を記入）/ `docs/deliverables-ledger.md`（成果物台帳。`templates/deliverables-ledger.md` から生成し、この時点の成果物を登録。一覧ビュー `docs/deliverables-index.html` は `templates/deliverables-index-template.html` から生成）。工程ディレクトリ（01-requirements/ 〜）は最初に使う工程の分だけ作ればよい（空ディレクトリを量産しない）
 4. プレイブック固有の初期成果物を登録（P1:棚卸し表の器 / P3:モック空白リスト / P4:差分定義表 / P6:線引き表）。**この時点で判明している曖昧さは全件、Q-ID＋影響範囲つきで open-questions に起票する**（曖昧なスタートの案件ほど、初期起票の量がそのまま仮定管理の土台になる。正本: docs/90-pack/standards/assumption-management.md）
